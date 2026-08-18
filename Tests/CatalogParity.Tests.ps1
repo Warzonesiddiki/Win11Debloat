@@ -177,14 +177,18 @@ Describe 'Feature catalogue integrity' {
     }
 
     It 'assigns every categorised feature to a declared category' {
+        # Features reference a category by its display Name (e.g. "Privacy & Suggested
+        # Content"), not by CategoryId. Some names happen to equal their id ("System",
+        # "Taskbar"), so match on Name and treat CategoryId as an accepted alias.
+        $categoryNames = @($script:Catalog.Categories | ForEach-Object { $_.Name })
         $categoryIds = @($script:Catalog.Categories | ForEach-Object { $_.CategoryId })
         $unknown = @(
             $script:Features |
-                Where-Object { $_.Category -and $categoryIds -notcontains $_.Category } |
+                Where-Object { $_.Category -and $categoryNames -notcontains $_.Category -and $categoryIds -notcontains $_.Category } |
                 ForEach-Object { "$($_.FeatureId) -> $($_.Category)" }
         )
 
-        $unknown | Should -BeNullOrEmpty -Because "features must map to a category in Categories: $($unknown -join ', ')"
+        $unknown | Should -BeNullOrEmpty -Because "features must map to a category declared in Categories: $($unknown -join ', ')"
     }
 
     It 'points every RegistryKey at a file that exists' {

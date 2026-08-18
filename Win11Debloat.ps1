@@ -40,6 +40,7 @@ param (
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
+    [switch]$PreventAppReinstall,
     [switch]$DisableLocationServices,
     [switch]$DisableFindMyDevice,
     [switch]$DisableEdgeAds,

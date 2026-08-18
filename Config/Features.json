@@ -414,6 +414,19 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "PreventAppReinstall",
+      "Label": "Prevent Windows from reinstalling removed & promoted apps",
+      "ToolTip": "Windows silently reinstalls promoted apps such as Candy Crush, TikTok and Spotify, and can bring back preinstalled or OEM apps you removed, especially after a feature update. This turns off Microsoft consumer experiences and stops Content Delivery Manager from re-provisioning those apps. The machine-wide policy is fully honoured on Pro, Enterprise and Education; the per-user settings cover Home as well. This does not remove apps by itself, use the app removal options for that.",
+      "Category": "Privacy & Suggested Content",
+      "RegistryKey": "Prevent_App_Reinstall.reg",
+      "ApplyText": "Preventing Windows from reinstalling removed & promoted apps",
+      "UndoLabel": "Allow Windows to reinstall removed & promoted apps",
+      "ApplyUndoText": "Allowing Windows to reinstall removed & promoted apps",
+      "RegistryUndoKey": "Allow_App_Reinstall.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableNotifications",
       "Label": "Disable Windows Notifications (From apps and other senders)",
       "ToolTip": "Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.",
