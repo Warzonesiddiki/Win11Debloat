@@ -40,6 +40,26 @@ mirrors of the Python gates and additionally exercise the PowerShell-side
 parsers (`Get-RegFileOperations`, `Get-RegFileTargets`, the param-block and
 `$script:ControlParams` extraction).
 
+The suite is **safe to run on a live host**: `Tests/TestSuiteSafety.Tests.ps1`
+forbids any test from directly invoking high-impact mutation commands
+(`reg`, `Remove-AppxPackage`, `Checkpoint-Computer`, `Set-ItemProperty` on real
+paths, …), so the tests are mock-based. On the dev Windows host this completed
+**588 passed / 0 failed / 2 skipped** — the 2 skips are PSScriptAnalyzer
+availability notices, not failures.
+
+## Step 2b — Static analysis (PSScriptAnalyzer)
+
+```
+Install-Module PSScriptAnalyzer -Scope CurrentUser
+Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error
+```
+
+Must report **zero error-level findings**. Warning-level rules (plural nouns,
+`Write-Host`) are deliberately not enforced — the codebase makes different
+choices there. The repo gate only fails on errors. On the dev host this was
+clean (including `Scripts/Verify-RegistryPaths.ps1`,
+`Scripts/Invoke-DriftCheck.ps1`, `Scripts/Register-DriftCheckTask.ps1`).
+
 ## Step 3 — Apply every setting and confirm the registry
 
 The 69 winforge-derived tweaks added in this fork harvested their registry paths
@@ -126,7 +146,8 @@ reports correctly.
 
 - [ ] `verify_catalogue.py` — all 11 gates green.
 - [ ] `Verify-RegistryPaths.ps1` — `VERIFIED 69 | MISMATCH 0` (elevated run).
-- [ ] Pester `Invoke-Pester Tests` — all green.
+- [ ] Pester `Invoke-Pester Tests` — all green (dev host: 588 passed / 0 failed).
+- [ ] `Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error` — zero findings.
 - [ ] Every feature applied; live registry matches its `.reg` (drift check clean).
 - [ ] WPF GUI loads all categories, including Network & Security; toggles wired.
 - [ ] Sysprep / new-profile parity confirmed.
