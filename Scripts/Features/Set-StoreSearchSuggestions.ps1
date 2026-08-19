@@ -16,15 +16,34 @@ function Set-StoreSearchSuggestionsDisabledForAllUsers {
     $userPathString = Get-UserDirectory -userName "*" -fileName "AppData\Local\Packages"
     $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
-    # Go through all users and disable start search suggestions
+    # Go through all users and disable start search suggestions. A failure for one
+    # profile must not prevent the remaining profiles from being processed.
+    $failedProfiles = 0
+
     foreach ($storeDbPath in $usersStoreDbPaths) {
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+        try {
+            Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+        }
+        catch {
+            $failedProfiles++
+            Write-Warning "Failed to disable Microsoft Store search suggestions for '$($storeDbPath.FullName)': $($_.Exception.Message)"
+        }
     }
 
     # Also disable start search suggestions for the default user profile
     $defaultStoreDbPath = Get-StoreAppsDatabasePathForUser -UserName "Default"
     if ($defaultStoreDbPath) {
-        Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $defaultStoreDbPath
+        try {
+            Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase $defaultStoreDbPath
+        }
+        catch {
+            $failedProfiles++
+            Write-Warning "Failed to disable Microsoft Store search suggestions for the default user profile: $($_.Exception.Message)"
+        }
+    }
+
+    if ($failedProfiles -gt 0) {
+        Write-Warning "Microsoft Store search suggestions could not be disabled for $failedProfiles user profile(s). See the warnings above for details."
     }
 }
 
@@ -66,11 +85,17 @@ function Set-StoreSearchSuggestionsDisabled {
 
         $storeDbDir = Split-Path -Path $StoreAppsDatabase -Parent
 
-        if (-not (Test-Path -Path $storeDbDir)) {
-            New-Item -Path $storeDbDir -ItemType Directory -Force | Out-Null
-        }
+        try {
+            if (-not (Test-Path -Path $storeDbDir)) {
+                New-Item -Path $storeDbDir -ItemType Directory -Force -ErrorAction Stop | Out-Null
+            }
 
-        New-Item -Path $StoreAppsDatabase -ItemType File -Force | Out-Null
+            New-Item -Path $StoreAppsDatabase -ItemType File -Force -ErrorAction Stop | Out-Null
+        }
+        catch {
+            Write-Warning "Failed to create store database '$StoreAppsDatabase' for user ${userName}: $($_.Exception.Message)"
+            return
+        }
     }
     
     try {
@@ -106,15 +131,34 @@ function Set-StoreSearchSuggestionsEnabledForAllUsers {
     $userPathString = Get-UserDirectory -userName "*" -fileName "AppData\Local\Packages"
     $usersStoreDbPaths = Get-ChildItem -Path $userPathString -ErrorAction SilentlyContinue
 
-    # Go through all users and re-enable start search suggestions
+    # Go through all users and re-enable start search suggestions. A failure for one
+    # profile must not prevent the remaining profiles from being restored.
+    $failedProfiles = 0
+
     foreach ($storeDbPath in $usersStoreDbPaths) {
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+        try {
+            Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase ($storeDbPath.FullName + "\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db")
+        }
+        catch {
+            $failedProfiles++
+            Write-Warning "Failed to re-enable Microsoft Store search suggestions for '$($storeDbPath.FullName)': $($_.Exception.Message)"
+        }
     }
 
     # Also re-enable for the default user profile
     $defaultStoreDbPath = Get-StoreAppsDatabasePathForUser -UserName "Default"
     if ($defaultStoreDbPath) {
-        Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $defaultStoreDbPath
+        try {
+            Set-StoreSearchSuggestionsEnabled -StoreAppsDatabase $defaultStoreDbPath
+        }
+        catch {
+            $failedProfiles++
+            Write-Warning "Failed to re-enable Microsoft Store search suggestions for the default user profile: $($_.Exception.Message)"
+        }
+    }
+
+    if ($failedProfiles -gt 0) {
+        Write-Warning "Microsoft Store search suggestions could not be re-enabled for $failedProfiles user profile(s). See the warnings above for details."
     }
 }
 

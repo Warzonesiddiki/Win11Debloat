@@ -76,6 +76,9 @@ This method supports command-line parameters to customize the behaviour of the s
 
 Below is an overview of the key features and functionality offered by Win11Debloat. You can visit the [the wiki](https://github.com/Raphire/Win11Debloat/wiki) for more details.
 
+> [!Note]
+> [**docs/FEATURES.md**](docs/FEATURES.md) documents every setting individually, including the exact registry values it writes and how it is reverted, so you can see precisely what a setting does before you run it.
+
 > [!Tip]
 > All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. You can visit [the wiki](https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes) for more information on reverting changes.
 
@@ -87,7 +90,11 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Disable telemetry, diagnostic data, activity history, app-launch tracking & targeted ads.
 - Disable tips, tricks, suggestions & ads across Windows, the lock screen and Microsoft Edge.
+- Prevent Windows from reinstalling removed apps and silently installing promoted apps.
 - Disable Windows location services, app location access and Find My Device location tracking.
+- Disable Windows Error Reporting, the Customer Experience Improvement Program and Microsoft experiments.
+- Disable Microsoft Office telemetry, settings sync, clipboard sync and text message cloud sync.
+- Stop websites reading your language list, and block camera access from the lock screen.
 - Hide Microsoft 365 ads on the Settings 'Home' page, or hide the 'Home' page entirely.
 
 #### AI Features
@@ -95,6 +102,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable & remove Microsoft Copilot, Windows Recall and Click to Do.
 - Prevent AI service (WSAIFabricSvc) from starting automatically.
 - Disable AI Features in Edge, Paint and Notepad.
+
+#### Network & Security
+
+- Disable LLMNR, a legacy name-resolution fallback that attackers use to capture credentials.
+- Block anonymous enumeration of user accounts and shared folders over the network.
+- Disable Remote Assistance, Windows Connect Now (WPS) and auto-connect to suggested open hotspots.
 
 #### System
 
@@ -164,10 +177,39 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Ability to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Which ensures, all new users will have the changes automatically applied to them.
+- Drift detection: check whether Windows has reverted any of your previously applied settings, and re-apply only those.
+
+  ```PowerShell
+  .\Win11Debloat.ps1 -CheckDrift    # report what Windows changed back (read-only)
+  .\Win11Debloat.ps1 -RepairDrift   # report, then re-apply only the reverted settings
+  ```
+
+- Machine-readable run summaries for deployment, so a script can check the outcome without parsing console output.
+
+  ```PowerShell
+  .\Win11Debloat.ps1 -RunDefaults -Silent -RunSummaryPath "C:\reports\pc01.json"
+  ```
+
+- Ready-made presets for common goals, applied through the normal config import.
+
+  ```PowerShell
+  .\Win11Debloat.ps1 -Config "Config\Presets\Privacy.json"    # data collection & cloud sync
+  .\Win11Debloat.ps1 -Config "Config\Presets\AI-Free.json"    # Copilot, Recall, Click to Do, AI in apps
+  .\Win11Debloat.ps1 -Config "Config\Presets\Security.json"   # network attack surface
+  .\Win11Debloat.ps1 -Config "Config\Presets\Minimal.json"    # ads & suggested content only
+  ```
+
+  Each preset requests a restore point, changes nothing else, and can be reverted the
+  same way as any other setting. Open the file to see exactly what it selects.
 
 ## Contributing
 
 We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/master/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
+
+Before opening a pull request, run the test suite with `.\Scripts\Run-Tests.ps1 -Bootstrap`.
+On a real Windows machine you can also run `.\Scripts\Invoke-SmokeTest.ps1`, which sweeps
+every setting through the pipeline with `-WhatIf` without changing anything; see
+[docs/WINDOWS_SMOKE_TEST.md](docs/WINDOWS_SMOKE_TEST.md).
 
 ## License
 

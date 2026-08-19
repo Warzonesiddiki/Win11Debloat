@@ -251,7 +251,17 @@ function Invoke-ApplyFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
         }
 
-        Invoke-FeatureApply -FeatureId $featureId
+        # A failure in one feature must not abandon the features queued behind it,
+        # which would leave the run silently half-applied. Record it and continue;
+        # Invoke-AllChanges reports the total at the end of the run.
+        try {
+            Invoke-FeatureApply -FeatureId $featureId
+        }
+        catch {
+            $script:FeatureFailures++
+            Write-Warning "Failed to apply '$featureId': $($_.Exception.Message)"
+        }
+
         $step++
     }
 }
@@ -291,11 +301,20 @@ function Invoke-UndoFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $undoText
         }
 
-        if ($f -and $f.RegistryUndoKey) {
-            Import-RegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+        # As with the apply phase, one failing feature must not abandon the rest of
+        # the undo queue: a partially reverted system is worse than a reported failure.
+        try {
+            if ($f -and $f.RegistryUndoKey) {
+                Import-RegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+            }
+
+            Invoke-FeatureUndo -FeatureId $featureId
+        }
+        catch {
+            $script:FeatureFailures++
+            Write-Warning "Failed to undo '$featureId': $($_.Exception.Message)"
         }
 
-        Invoke-FeatureUndo -FeatureId $featureId
         $step++
     }
 }
@@ -326,7 +345,10 @@ function Invoke-AllChanges {
 
     $script:RegistryImportFailures = 0
     $script:AppRemovalFailures = 0
+    $script:FeatureFailures = 0
+    $script:NotInEffectFeatureIds = @()
     $script:AppRemovalVerificationUnavailable = $false
+    $runStartedAt = Get-Date
 
     # ---- Gather work items ----
     $applyIds = @()
@@ -431,6 +453,17 @@ function Invoke-AllChanges {
     # ================================================================
     # Final: Report registry import and app removal failures
     # ================================================================
+    # Confirm the changes actually landed. Group Policy on a managed device, or security
+    # software, can silently reimpose its own values, and reporting success in that case
+    # would be misleading. Only valid against the live registry, so this is skipped for
+    # Sysprep and other-user runs, where a different hive was modified.
+    if ($applyIds.Count -gt 0 -and
+        -not $script:Params.ContainsKey('WhatIf') -and
+        -not $script:Params.ContainsKey('Sysprep') -and
+        -not $script:Params.ContainsKey('User')) {
+        $null = Write-AppliedChangesReport -FeatureIds $applyIds
+    }
+
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""
         Write-Warning "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details."
@@ -441,8 +474,20 @@ function Invoke-AllChanges {
         Write-Warning "$($script:AppRemovalFailures) app removal(s) failed. See output above for details."
     }
 
+    if ($script:FeatureFailures -gt 0) {
+        Write-Host ""
+        Write-Warning "$($script:FeatureFailures) change(s) could not be completed and were skipped. See the warnings above for details."
+    }
+
     if ($script:AppRemovalVerificationUnavailable) {
         Write-Warning "Unable to verify if all apps were uninstalled successfully."
+    }
+
+    # Machine-readable record of the run, for deployments that need to check the
+    # outcome without parsing console output. Opt-in via -RunSummaryPath.
+    if ($script:Params.ContainsKey('RunSummaryPath')) {
+        $summary = New-RunSummary -AppliedFeatureIds $applyIds -UndoneFeatureIds $undoIds -StartedAt $runStartedAt
+        Write-RunSummary -Path ([string]$script:Params['RunSummaryPath']) -Summary $summary
     }
 
 }

@@ -22,6 +22,49 @@ function Get-ExpectedRegistryValueKind {
     }
 }
 
+# Features whose applied state is determined by custom logic in Test-FeatureApplied
+# rather than by comparing their apply .reg file against the live registry. Keep this
+# list in step with the switch inside Test-FeatureApplied; CatalogParity.Tests.ps1
+# asserts that every id listed here is actually handled there.
+$script:StateDetectionCustomFeatures = @(
+    'DisableWidgets'
+    'DisableStoreSearchSuggestions'
+    'EnableWindowsSandbox'
+    'EnableWindowsSubsystemForLinux'
+)
+
+<#
+    .SYNOPSIS
+        Tests whether a feature's applied state can be detected at all.
+
+    .DESCRIPTION
+        Test-FeatureApplied returns $false both when a feature is genuinely not applied
+        and when its state simply cannot be determined (no RegistryKey and no custom
+        detection logic). Callers that need to tell those two cases apart - such as
+        drift detection, which would otherwise report undetectable features as reverted -
+        must check this first.
+
+    .PARAMETER FeatureId
+        The feature identifier to test.
+
+    .OUTPUTS
+        System.Boolean
+#>
+function Test-FeatureSupportsStateDetection {
+    param (
+        [Parameter(Mandatory)]
+        [string]$FeatureId
+    )
+
+    if ($script:StateDetectionCustomFeatures -contains $FeatureId) {
+        return $true
+    }
+
+    $feature = $script:Features[$FeatureId]
+
+    return [bool]($feature -and $feature.RegistryKey)
+}
+
 <#
     .SYNOPSIS
         Tests whether a feature's registry operations currently match the live registry.

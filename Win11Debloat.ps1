@@ -4,6 +4,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$LogPath,
+    [string]$RunSummaryPath,
     [string]$User,
     [Alias('NoRestartExplorer')]
     [switch]$SkipExplorerRestart,
@@ -12,6 +13,8 @@ param (
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
+    [switch]$CheckDrift,
+    [switch]$RepairDrift,
     [string]$Config,
     [string]$Apps,
     [string]$AppRemovalTarget,
@@ -40,6 +43,22 @@ param (
     [switch]$DisableDesktopSpotlight,
     [switch]$DisableLockscreenTips,
     [switch]$DisableSuggestions,
+    [switch]$DisableSettingsSync,
+    [switch]$DisableOfficeTelemetry,
+    [switch]$DisableErrorReporting,
+    [switch]$DisableCEIP,
+    [switch]$DisableCloudClipboard,
+    [switch]$DisableMessageSync,
+    [switch]$DisableLanguageListAccess,
+    [switch]$DisableLockscreenCamera,
+    [switch]$DisableSpeechModelUpdates,
+    [switch]$DisableExperimentation,
+    [switch]$DisableLLMNR,
+    [switch]$DisableRemoteAssistance,
+    [switch]$RestrictAnonymousAccess,
+    [switch]$DisableWifiSense,
+    [switch]$DisableWindowsConnectNow,
+    [switch]$PreventAppReinstall,
     [switch]$DisableLocationServices,
     [switch]$DisableFindMyDevice,
     [switch]$DisableEdgeAds,
@@ -196,7 +215,7 @@ $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'Import-AppDetailsFromJson.ps1'
 $script:TestAppInWingetListScriptPath = Join-Path (Join-Path $scriptsPath 'AppRemoval') 'Test-AppInWingetList.ps1'
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'Config', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'RunSummaryPath', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'CheckDrift', 'RepairDrift', 'Config', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -370,6 +389,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 
 # Features functions
 . "$PSScriptRoot/Scripts/Features/Get-CurrentTweakState.ps1"
+. "$PSScriptRoot/Scripts/Features/Test-ConfigurationDrift.ps1"
 . "$PSScriptRoot/Scripts/Features/Invoke-Changes.ps1"
 . "$PSScriptRoot/Scripts/Features/Invoke-SystemRestorePoint.ps1"
 . "$PSScriptRoot/Scripts/Features/Backup-RegistryFeatureSelection.ps1"
@@ -389,6 +409,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/FileIO/Import-JsonFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Save-ToFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Save-Settings.ps1"
+. "$PSScriptRoot/Scripts/FileIO/Write-RunSummary.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Import-Settings.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Get-ValidatedAppList.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Import-AppsFromFile.ps1"
@@ -511,6 +532,30 @@ if ($script:Params.ContainsKey("AppRemovalTarget")) {
 # Remove LastUsedSettings.json file if it exists and is empty
 if ((Test-Path $script:SavedSettingsFilePath) -and ([String]::IsNullOrWhiteSpace((Get-content $script:SavedSettingsFilePath)))) {
     Remove-Item -Path $script:SavedSettingsFilePath -Force
+}
+
+# ---- Configuration drift ----
+# -CheckDrift is read-only: it reports which previously applied settings Windows has
+# changed back, then exits. -RepairDrift queues the drifted settings as normal work so
+# they go through the usual backup, restore point and reporting pipeline below.
+if ($CheckDrift -or $RepairDrift) {
+    Write-CliHeader 'Configuration Drift'
+
+    $driftResults = @(Get-ConfigurationDrift)
+    Write-ConfigurationDriftReport -Results $driftResults
+
+    $driftedFeatureIds = @($driftResults | Where-Object { $_.Status -eq 'Reverted' } | ForEach-Object { $_.FeatureId })
+
+    if ($CheckDrift -or $driftedFeatureIds.Count -eq 0) {
+        Wait-ForKeyPress
+    }
+
+    Write-Output ""
+    Write-Output "Re-applying $($driftedFeatureIds.Count) reverted setting(s)..."
+
+    foreach ($driftedFeatureId in $driftedFeatureIds) {
+        Add-Parameter $driftedFeatureId $true
+    }
 }
 
 # Default to CLI mode for deployment-targeted parameters.

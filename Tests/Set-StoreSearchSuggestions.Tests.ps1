@@ -72,6 +72,50 @@ Describe 'Store-search suggestion all-user operations' {
         Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 2 -Exactly
     }
 
+    It 'keeps disabling the remaining profiles when one profile fails' {
+        Mock Set-StoreSearchSuggestionsDisabled { throw 'access denied' } -ParameterFilter { $StoreAppsDatabase -match 'Users\\Alice\\' }
+
+        { Set-StoreSearchSuggestionsDisabledForAllUsers } | Should -Not -Throw
+
+        Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 3 -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 1 -Exactly -ParameterFilter { $StoreAppsDatabase -match 'Users\\Bob\\' }
+        Should -Invoke Set-StoreSearchSuggestionsDisabled -Times 1 -Exactly -ParameterFilter { $StoreAppsDatabase -match 'Users\\Default\\' }
+    }
+
+    It 'keeps re-enabling the remaining profiles when one profile fails' {
+        Mock Set-StoreSearchSuggestionsEnabled { throw 'database is locked' } -ParameterFilter { $StoreAppsDatabase -match 'Users\\Alice\\' }
+
+        { Set-StoreSearchSuggestionsEnabledForAllUsers } | Should -Not -Throw
+
+        Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 3 -Exactly
+        Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 1 -Exactly -ParameterFilter { $StoreAppsDatabase -match 'Users\\Bob\\' }
+        Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 1 -Exactly -ParameterFilter { $StoreAppsDatabase -match 'Users\\Default\\' }
+    }
+
+    It 'still processes user profiles when the Default profile fails' {
+        Mock Set-StoreSearchSuggestionsEnabled { throw 'access denied' } -ParameterFilter { $StoreAppsDatabase -match 'Users\\Default\\' }
+
+        { Set-StoreSearchSuggestionsEnabledForAllUsers } | Should -Not -Throw
+
+        Should -Invoke Set-StoreSearchSuggestionsEnabled -Times 3 -Exactly
+    }
+
+    It 'warns per failed profile and reports a summary' {
+        Mock Set-StoreSearchSuggestionsDisabled { throw 'access denied' } -ParameterFilter { $StoreAppsDatabase -match 'Users\\Alice\\' }
+
+        Set-StoreSearchSuggestionsDisabledForAllUsers
+
+        Should -Invoke Write-Warning -Times 2 -Exactly
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*access denied*' }
+        Should -Invoke Write-Warning -Times 1 -Exactly -ParameterFilter { $Message -like '*1 user profile(s)*' }
+    }
+
+    It 'does not warn when every profile succeeds' {
+        Set-StoreSearchSuggestionsDisabledForAllUsers
+
+        Should -Invoke Write-Warning -Times 0 -Exactly
+    }
+
 }
 
 Describe 'Set-StoreSearchSuggestionsDisabled' {
@@ -124,6 +168,22 @@ Describe 'Set-StoreSearchSuggestionsDisabled' {
         Should -Invoke Get-Acl -Times 1 -Exactly
         Should -Invoke Set-Acl -Times 1 -Exactly
         $acl.AddedRules | Should -HaveCount 1
+    }
+
+    It 'warns and skips ACL work when the database cannot be created' {
+        $script:Params = @{}
+        Mock Test-Path { $false }
+        Mock New-Item { throw 'access denied' }
+        Mock Get-Acl { throw 'ACL must not be read after a creation failure.' }
+        Mock Set-Acl { throw 'ACL must not be written after a creation failure.' }
+        Mock Write-Warning {}
+
+        { Set-StoreSearchSuggestionsDisabled -StoreAppsDatabase 'C:\Users\Alice\AppData\Local\Packages\store.db' } | Should -Not -Throw
+
+        Should -Invoke Write-Warning -Times 1 -Exactly
+        Should -Invoke Get-Acl -Times 0 -Exactly
+        Should -Invoke Set-Acl -Times 0 -Exactly
+        Should -Invoke Write-Host -Times 0 -Exactly -ParameterFilter { $Object -like 'Disabled Microsoft Store search suggestions*' }
     }
 
     It 'warns and does not report success when reading the ACL fails' {

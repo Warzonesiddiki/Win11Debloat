@@ -1,0 +1,112 @@
+{
+  "Version": "1.0",
+  "Description": "Turns off data collection and cloud sync without changing how Windows looks or behaves.",
+  "Deployment": [
+    {
+      "Name": "CreateRestorePoint",
+      "Value": true
+    },
+    {
+      "Name": "SkipRegistryBackup",
+      "Value": false
+    }
+  ],
+  "Tweaks": [
+    {
+      "Name": "DisableTelemetry",
+      "Value": true
+    },
+    {
+      "Name": "DisableSuggestions",
+      "Value": true
+    },
+    {
+      "Name": "PreventAppReinstall",
+      "Value": true
+    },
+    {
+      "Name": "DisableErrorReporting",
+      "Value": true
+    },
+    {
+      "Name": "DisableCEIP",
+      "Value": true
+    },
+    {
+      "Name": "DisableExperimentation",
+      "Value": true
+    },
+    {
+      "Name": "DisableSettingsSync",
+      "Value": true
+    },
+    {
+      "Name": "DisableOfficeTelemetry",
+      "Value": true
+    },
+    {
+      "Name": "DisableCloudClipboard",
+      "Value": true
+    },
+    {
+      "Name": "DisableMessageSync",
+      "Value": true
+    },
+    {
+      "Name": "DisableLanguageListAccess",
+      "Value": true
+    },
+    {
+      "Name": "DisableSpeechModelUpdates",
+      "Value": true
+    },
+    {
+      "Name": "DisableLocationServices",
+      "Value": true
+    },
+    {
+      "Name": "DisableFindMyDevice",
+      "Value": true
+    },
+    {
+      "Name": "DisableSearchHistory",
+      "Value": true
+    },
+    {
+      "Name": "DisableSearchHighlights",
+      "Value": true
+    },
+    {
+      "Name": "DisableBing",
+      "Value": true
+    },
+    {
+      "Name": "DisableStoreSearchSuggestions",
+      "Value": true
+    },
+    {
+      "Name": "DisableDesktopSpotlight",
+      "Value": true
+    },
+    {
+      "Name": "DisableLockscreenTips",
+      "Value": true
+    },
+    {
+      "Name": "DisableSettings365Ads",
+      "Value": true
+    },
+    {
+      "Name": "DisableEdgeAds",
+      "Value": true
+    },
+    {
+      "Name": "DisableDeliveryOptimization",
+      "Value": true
+    },
+    {
+      "Name": "DisableDeviceAutoAppDownload",
+      "Value": true
+    }
+  ]
+}
