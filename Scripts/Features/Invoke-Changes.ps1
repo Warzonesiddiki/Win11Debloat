@@ -251,7 +251,17 @@ function Invoke-ApplyFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $displayName
         }
 
-        Invoke-FeatureApply -FeatureId $featureId
+        # A failure in one feature must not abandon the features queued behind it,
+        # which would leave the run silently half-applied. Record it and continue;
+        # Invoke-AllChanges reports the total at the end of the run.
+        try {
+            Invoke-FeatureApply -FeatureId $featureId
+        }
+        catch {
+            $script:FeatureFailures++
+            Write-Warning "Failed to apply '$featureId': $($_.Exception.Message)"
+        }
+
         $step++
     }
 }
@@ -291,11 +301,20 @@ function Invoke-UndoFeatures {
             & $script:ApplyProgressCallback $step $TotalSteps $undoText
         }
 
-        if ($f -and $f.RegistryUndoKey) {
-            Import-RegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+        # As with the apply phase, one failing feature must not abandon the rest of
+        # the undo queue: a partially reverted system is worse than a reported failure.
+        try {
+            if ($f -and $f.RegistryUndoKey) {
+                Import-RegistryFile "> $undoText" (Resolve-UndoRegFilePath $f.RegistryUndoKey)
+            }
+
+            Invoke-FeatureUndo -FeatureId $featureId
+        }
+        catch {
+            $script:FeatureFailures++
+            Write-Warning "Failed to undo '$featureId': $($_.Exception.Message)"
         }
 
-        Invoke-FeatureUndo -FeatureId $featureId
         $step++
     }
 }
@@ -326,6 +345,7 @@ function Invoke-AllChanges {
 
     $script:RegistryImportFailures = 0
     $script:AppRemovalFailures = 0
+    $script:FeatureFailures = 0
     $script:AppRemovalVerificationUnavailable = $false
 
     # ---- Gather work items ----
@@ -439,6 +459,11 @@ function Invoke-AllChanges {
     if ($script:AppRemovalFailures -gt 0) {
         Write-Host ""
         Write-Warning "$($script:AppRemovalFailures) app removal(s) failed. See output above for details."
+    }
+
+    if ($script:FeatureFailures -gt 0) {
+        Write-Host ""
+        Write-Warning "$($script:FeatureFailures) change(s) could not be completed and were skipped. See the warnings above for details."
     }
 
     if ($script:AppRemovalVerificationUnavailable) {

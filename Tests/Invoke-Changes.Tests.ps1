@@ -235,6 +235,29 @@ Describe 'Invoke-ApplyFeatures' {
         Should -Invoke Invoke-FeatureApply -Times 0 -Exactly
         $script:progressCalls | Should -HaveCount 0
     }
+
+    It 'applies the remaining features when one of them fails' {
+        $script:FeatureFailures = 0
+        Mock Write-Warning {}
+        Mock Invoke-FeatureApply { throw 'registry import failed' } -ParameterFilter { $FeatureId -eq 'One' }
+
+        { Invoke-ApplyFeatures -FeatureIds @('One', 'Two') -StartStep 1 -TotalSteps 2 } | Should -Not -Throw
+
+        Should -Invoke Invoke-FeatureApply -Times 1 -Exactly -ParameterFilter { $FeatureId -eq 'Two' }
+        Should -Invoke Write-Warning -Times 1 -Exactly
+        $script:FeatureFailures | Should -Be 1
+    }
+
+    It 'keeps the progress indicator advancing past a failed feature' {
+        $script:FeatureFailures = 0
+        Mock Write-Warning {}
+        Mock Invoke-FeatureApply { throw 'boom' } -ParameterFilter { $FeatureId -eq 'One' }
+
+        Invoke-ApplyFeatures -FeatureIds @('One', 'Two') -StartStep 3 -TotalSteps 5
+
+        $script:progressCalls | Should -HaveCount 2
+        $script:progressCalls[1] | Should -Be @(4, 5, 'Apply two')
+    }
 }
 
 Describe 'Invoke-UndoFeatures' {
@@ -271,6 +294,31 @@ Describe 'Invoke-UndoFeatures' {
 
         Should -Invoke Import-RegistryFile -Times 0 -Exactly
         Should -Invoke Invoke-FeatureUndo -Times 0 -Exactly
+    }
+
+    It 'undoes the remaining features when one of them fails' {
+        $script:FeatureFailures = 0
+        Mock Write-Warning {}
+        Mock Invoke-FeatureUndo { throw 'store database is locked' } -ParameterFilter { $FeatureId -eq 'RegistryUndo' }
+
+        { Invoke-UndoFeatures -FeatureIds @('RegistryUndo', 'CustomUndo') -StartStep 1 -TotalSteps 2 } | Should -Not -Throw
+
+        Should -Invoke Invoke-FeatureUndo -Times 1 -Exactly -ParameterFilter { $FeatureId -eq 'CustomUndo' }
+        Should -Invoke Write-Warning -Times 1 -Exactly
+        $script:FeatureFailures | Should -Be 1
+    }
+
+    It 'continues to the next feature when the undo registry import fails' {
+        $script:FeatureFailures = 0
+        Mock Write-Warning {}
+        Mock Import-RegistryFile { throw 'access denied' }
+
+        { Invoke-UndoFeatures -FeatureIds @('RegistryUndo', 'CustomUndo') -StartStep 1 -TotalSteps 2 } | Should -Not -Throw
+
+        # The failing feature must not run its custom undo, but the next one still must.
+        Should -Invoke Invoke-FeatureUndo -Times 0 -Exactly -ParameterFilter { $FeatureId -eq 'RegistryUndo' }
+        Should -Invoke Invoke-FeatureUndo -Times 1 -Exactly -ParameterFilter { $FeatureId -eq 'CustomUndo' }
+        $script:FeatureFailures | Should -Be 1
     }
 }
 
