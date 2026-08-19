@@ -25,7 +25,10 @@ BeforeAll {
 
 Describe 'Bundled presets' {
     It 'ships at least one preset' {
-        $script:PresetFiles.Count | Should -BeGreaterThan 0
+        # Re-query on disk: $script:PresetFiles is populated in BeforeDiscovery and is
+        # not guaranteed visible in the run phase under Pester 5's scoping.
+        $files = Get-ChildItem -LiteralPath (Join-Path $script:RepoRoot 'Config\Presets') -Filter '*.json' -ErrorAction SilentlyContinue
+        $files.Count | Should -BeGreaterThan 0
     }
 
     Context '<Name>' -ForEach $script:PresetFiles {
