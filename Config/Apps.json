@@ -90,6 +90,14 @@
       "RemovalMethod": "Appx"
     },
     {
+      "FriendlyName": "McAfee Security",
+      "AppId": "5A894077.McAfeeSecurity",
+      "Description": "Preinstalled McAfee antivirus trial",
+      "SelectedByDefault": false,
+      "Recommendation": "optional",
+      "RemovalMethod": "Appx"
+    },
+    {
       "FriendlyName": "Microsoft Copilot",
       "AppId": "XP9CXNGPPJ97XX",
       "Description": "AI assistant integrated into Windows",
