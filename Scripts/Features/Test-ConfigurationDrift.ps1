@@ -147,6 +147,78 @@ function Get-ConfigurationDrift {
 
 <#
     .SYNOPSIS
+        Checks that changes just applied actually took effect, and reports any that did not.
+
+    .DESCRIPTION
+        Applying a registry change and having it stick are different things. Group Policy
+        on a managed device silently reimposes its own values, a security product can
+        block a write, and some settings only materialise after a restart. Without a check
+        the run reports success either way, which is exactly the sort of quiet failure a
+        user discovers weeks later.
+
+        This re-uses the drift comparison against the features that were just applied.
+        Features that declare RequiresReboot are reported as pending rather than failed,
+        because their state legitimately does not reflect until the machine restarts.
+
+        Only meaningful for changes applied to the current user on the running system, so
+        callers must not use it for Sysprep or another-user runs, where the live registry
+        is not the registry that was modified.
+
+    .PARAMETER FeatureIds
+        The features that were just applied.
+
+    .OUTPUTS
+        System.Int32
+        The number of changes that did not take effect.
+#>
+function Write-AppliedChangesReport {
+    param(
+        [string[]]$FeatureIds = @()
+    )
+
+    if ($FeatureIds.Count -eq 0) { return 0 }
+
+    $results = @(Get-ConfigurationDrift -FeatureIds $FeatureIds)
+    $notInEffect = @($results | Where-Object { $_.Status -eq $script:DriftStatus_Reverted })
+
+    if ($notInEffect.Count -eq 0) { return 0 }
+
+    $pendingReboot = New-Object System.Collections.Generic.List[object]
+    $failed = New-Object System.Collections.Generic.List[object]
+
+    foreach ($result in $notInEffect) {
+        $feature = if ($script:Features.ContainsKey($result.FeatureId)) { $script:Features[$result.FeatureId] } else { $null }
+
+        if ($feature -and $feature.RequiresReboot) {
+            $pendingReboot.Add($result)
+        }
+        else {
+            $failed.Add($result)
+        }
+    }
+
+    if ($pendingReboot.Count -gt 0) {
+        Write-Host ""
+        Write-Host "$($pendingReboot.Count) change(s) will take effect after you restart:" -ForegroundColor Yellow
+        foreach ($result in $pendingReboot) {
+            Write-Host "    - $($result.Label)" -ForegroundColor Yellow
+        }
+    }
+
+    if ($failed.Count -gt 0) {
+        Write-Host ""
+        Write-Warning "$($failed.Count) change(s) were applied but are not in effect:"
+        foreach ($result in $failed) {
+            Write-Host "    - $($result.Label)" -ForegroundColor Red
+        }
+        Write-Host "This usually means Group Policy, a management tool or security software is enforcing its own value." -ForegroundColor Yellow
+    }
+
+    return $failed.Count
+}
+
+<#
+    .SYNOPSIS
         Prints a drift report to the console.
 
     .PARAMETER Results

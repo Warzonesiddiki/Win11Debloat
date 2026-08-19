@@ -451,6 +451,17 @@ function Invoke-AllChanges {
     # ================================================================
     # Final: Report registry import and app removal failures
     # ================================================================
+    # Confirm the changes actually landed. Group Policy on a managed device, or security
+    # software, can silently reimpose its own values, and reporting success in that case
+    # would be misleading. Only valid against the live registry, so this is skipped for
+    # Sysprep and other-user runs, where a different hive was modified.
+    if ($applyIds.Count -gt 0 -and
+        -not $script:Params.ContainsKey('WhatIf') -and
+        -not $script:Params.ContainsKey('Sysprep') -and
+        -not $script:Params.ContainsKey('User')) {
+        $null = Write-AppliedChangesReport -FeatureIds $applyIds
+    }
+
     if ($script:RegistryImportFailures -gt 0) {
         Write-Host ""
         Write-Warning "$($script:RegistryImportFailures) registry import change(s) failed. See output above for details."

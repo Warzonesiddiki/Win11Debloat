@@ -19,6 +19,8 @@ BeforeAll {
     function Replace-StartMenuForAllUsers { param($startMenuTemplate) }
     function Set-StoreSearchSuggestionsDisabledForAllUsers {}
     function Set-StoreSearchSuggestionsDisabled { param($StoreAppsDatabase) }
+    # Lives in Test-ConfigurationDrift.ps1, which this suite does not dot-source.
+    function Write-AppliedChangesReport { param($FeatureIds) }
 
     . (Join-Path $PSScriptRoot '..\Scripts\Features\Invoke-Changes.ps1')
 }
@@ -385,6 +387,40 @@ Describe 'Invoke-AllChanges' {
         Mock Invoke-UndoFeatures {}
         Mock Write-Host {}
         Mock Write-Warning {}
+    }
+
+    It 'verifies that applied changes actually took effect' {
+        Mock Write-AppliedChangesReport { return 0 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-AppliedChangesReport -Times 1 -Exactly -ParameterFilter {
+            $FeatureIds -contains 'RegistryApply'
+        }
+    }
+
+    It 'skips verification in WhatIf mode' {
+        $script:Params['WhatIf'] = $true
+        Mock Write-AppliedChangesReport { return 0 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-AppliedChangesReport -Times 0 -Exactly
+    }
+
+    It 'skips verification when a different hive was modified' -ForEach @(
+        @{ Mode = 'Sysprep' }
+        @{ Mode = 'User' }
+    ) {
+        # Test-FeatureApplied reads the live registry, which is not the hive that was
+        # written for the Default profile or another user, so checking it would report
+        # every change as failed.
+        $script:Params[$Mode] = $true
+        Mock Write-AppliedChangesReport { return 0 }
+
+        Invoke-AllChanges
+
+        Should -Invoke Write-AppliedChangesReport -Times 0 -Exactly
     }
 
     It 'backs up registry work before applying and undoing selected features' {

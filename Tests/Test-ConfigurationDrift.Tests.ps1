@@ -206,6 +206,66 @@ Describe 'Repair-ConfigurationDrift' {
     }
 }
 
+Describe 'Write-AppliedChangesReport' {
+    BeforeEach {
+        $script:Features = @{
+            Landed      = [PSCustomObject]@{ Label = 'Landed setting'; RegistryKey = 'A.reg' }
+            Blocked     = [PSCustomObject]@{ Label = 'Blocked setting'; RegistryKey = 'B.reg' }
+            NeedsReboot = [PSCustomObject]@{ Label = 'Reboot setting'; RegistryKey = 'C.reg'; RequiresReboot = $true }
+        }
+
+        Mock Write-Host {}
+        Mock Write-Warning {}
+        Mock Test-FeatureApplied { $true } -ParameterFilter { $FeatureId -eq 'Landed' }
+        Mock Test-FeatureApplied { $false } -ParameterFilter { $FeatureId -eq 'Blocked' }
+        Mock Test-FeatureApplied { $false } -ParameterFilter { $FeatureId -eq 'NeedsReboot' }
+    }
+
+    It 'stays silent when every change took effect' {
+        Write-AppliedChangesReport -FeatureIds @('Landed') | Should -Be 0
+
+        Should -Invoke Write-Warning -Times 0 -Exactly
+    }
+
+    It 'reports a change that was applied but is not in effect' {
+        $failed = Write-AppliedChangesReport -FeatureIds @('Landed', 'Blocked')
+
+        $failed | Should -Be 1
+        Should -Invoke Write-Warning -Times 1 -Exactly
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like '*Blocked setting*' }
+    }
+
+    It 'treats a reboot-dependent setting as pending rather than failed' {
+        # Its state legitimately does not reflect until the machine restarts, so counting
+        # it as a failure would cry wolf on every run.
+        $failed = Write-AppliedChangesReport -FeatureIds @('NeedsReboot')
+
+        $failed | Should -Be 0
+        Should -Invoke Write-Warning -Times 0 -Exactly
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like '*restart*' }
+    }
+
+    It 'separates reboot-pending changes from genuinely blocked ones' {
+        $failed = Write-AppliedChangesReport -FeatureIds @('Blocked', 'NeedsReboot')
+
+        $failed | Should -Be 1
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like '*Blocked setting*' }
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like '*Reboot setting*' }
+    }
+
+    It 'does nothing when no features were applied' {
+        Write-AppliedChangesReport -FeatureIds @() | Should -Be 0
+
+        Should -Invoke Test-FeatureApplied -Times 0 -Exactly
+    }
+
+    It 'blames policy enforcement rather than the script' {
+        Write-AppliedChangesReport -FeatureIds @('Blocked') | Out-Null
+
+        Should -Invoke Write-Host -Times 1 -Exactly -ParameterFilter { $Object -like '*Group Policy*' }
+    }
+}
+
 Describe 'Write-ConfigurationDriftReport' {
     BeforeEach {
         Mock Write-Host {}
