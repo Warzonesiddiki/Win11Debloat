@@ -76,6 +76,9 @@ This method supports command-line parameters to customize the behaviour of the s
 
 Below is an overview of the key features and functionality offered by Win11Debloat. You can visit the [the wiki](https://github.com/Raphire/Win11Debloat/wiki) for more details.
 
+> [!Note]
+> [**docs/FEATURES.md**](docs/FEATURES.md) documents every setting individually, including the exact registry values it writes and how it is reverted, so you can see precisely what a setting does before you run it.
+
 > [!Tip]
 > All of the changes made by Win11Debloat can easily be reverted and almost all of the apps can be reinstalled through the Microsoft Store. You can visit [the wiki](https://github.com/Raphire/Win11Debloat/wiki/Reverting-Changes) for more information on reverting changes.
 
