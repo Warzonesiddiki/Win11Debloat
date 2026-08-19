@@ -1,0 +1,35 @@
+name: Verify catalogue and registry parity
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run the CI-free Python parity gates
+        run: python Scripts/verify_catalogue.py
+
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-PackageProvider NuGet -Force -Scope CurrentUser
+          Install-Module Pester -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck -MaximumVersion 5.99.99
+
+      - name: Run the Pester gate suite
+        shell: pwsh
+        run: |
+          Import-Module Pester -MaximumVersion 5.99.99
+          $result = Invoke-Pester Tests -PassThru -Show Summary
+          if ($result.FailedCount -gt 0) { exit 1 }
