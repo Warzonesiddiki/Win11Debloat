@@ -102,6 +102,10 @@ Describe 'Get-ConfigurationDrift' {
 
         Mock Test-FeatureApplied { $true } -ParameterFilter { $FeatureId -eq 'StillApplied' }
         Mock Test-FeatureApplied { $false } -ParameterFilter { $FeatureId -eq 'WasReverted' }
+        # Read-only reporter: the 'never writes to the system' assertion guards that
+        # Get-ConfigurationDrift does not call the apply path. The mock must exist for
+        # Should -Invoke to reference it.
+        Mock Invoke-FeatureApply {}
     }
 
     It 'reports a setting that is still in effect as applied' {
