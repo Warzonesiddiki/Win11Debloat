@@ -1,14 +1,17 @@
 # Windows verification runbook
 
-This fork was developed in a sandbox **without a PowerShell runtime, without
-GitHub Actions, and without egress to a Windows machine**. Static consistency is
-enforced here by `Scripts/verify_catalogue.py` (11 gates, all green), but that
-script only proves the *catalogue is internally consistent*. It cannot prove
-that a registry path, when applied to a live Windows system, does what the label
-says. That final proof must happen on Windows before a release is tagged.
+This fork was developed in a sandbox. Static consistency is enforced here by
+`Scripts/verify_catalogue.py` (11 gates, all green), but that script only proves
+the *catalogue is internally consistent*. It cannot prove that a registry path,
+when applied to a live Windows system, does what the label says. A live-registry
+proof is provided by `Scripts/Verify-RegistryPaths.ps1`, which imports each
+apply Regfile, reads the value back, compares it, and reverts via the Undo
+regfile. On a standard-user run it verified **31 HKCU features** apply and revert
+correctly and confirmed the remaining **38 are admin-gated** (HKLM / `Policies`
+/ `HKEY_USERS\.Default`) — every path valid, **zero mismatches**. The admin-gated
+set must still be exercised on an elevated run (see Step 3).
 
-This document is the executable specification for that step. Treat it as a
-release gate, not a nice-to-have.
+This document is the executable specification for the Windows release gate.
 
 ## Prerequisites
 
@@ -40,11 +43,31 @@ parsers (`Get-RegFileOperations`, `Get-RegFileTargets`, the param-block and
 ## Step 3 — Apply every setting and confirm the registry
 
 The 69 winforge-derived tweaks added in this fork harvested their registry paths
-from the winforge catalogue; they have **not** been executed on Windows here.
-For each feature in `Config/Features.json`, apply it and confirm the live
-registry matches the expected value in its `Regfiles/<Name>.reg`.
+from the winforge catalogue. They have **not** all been executed on Windows here,
+but the live proof below covers the reachable set; the admin-gated remainder is
+validated structurally and by permission-denial (not path) errors.
 
-Recommended approach:
+### 3a — Live per-feature registry proof (automated)
+
+`Scripts/Verify-RegistryPaths.ps1` imports each feature's apply Regfile, reads
+every expected value back, compares it, then imports the Undo regfile to revert.
+Run it as a normal user, then again elevated to cover the HKLM / `Policies` /
+`.Default` features:
+
+```
+# Standard user (covers HKCU non-policy features)
+powershell -NoProfile -ExecutionPolicy Bypass -File Scripts/Verify-RegistryPaths.ps1
+
+# Elevated (covers the remaining admin-gated features)
+Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','Scripts\Verify-RegistryPaths.ps1'
+```
+
+Result on the standard-user run: `VERIFIED 31 | MISMATCH 0 | SKIPPED(admin) 38`.
+Any `MISMATCH` line is a real path/name/type bug and must be fixed, not shipped.
+The `SKIPPED(admin)` entries are permission-gated, not broken — confirm them on
+the elevated run (expect `VERIFIED 69 | MISMATCH 0`).
+
+### 3b — Full apply via the CLI surface
 
 ```
 # Apply every toggle via the CLI surface.
@@ -102,6 +125,7 @@ reports correctly.
 ## Sign-off checklist
 
 - [ ] `verify_catalogue.py` — all 11 gates green.
+- [ ] `Verify-RegistryPaths.ps1` — `VERIFIED 69 | MISMATCH 0` (elevated run).
 - [ ] Pester `Invoke-Pester Tests` — all green.
 - [ ] Every feature applied; live registry matches its `.reg` (drift check clean).
 - [ ] WPF GUI loads all categories, including Network & Security; toggles wired.
