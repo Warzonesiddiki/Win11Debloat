@@ -100,6 +100,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Prevent AI service (WSAIFabricSvc) from starting automatically.
 - Disable AI Features in Edge, Paint and Notepad.
 
+#### Network & Security
+
+- Disable LLMNR, a legacy name-resolution fallback that attackers use to capture credentials.
+- Block anonymous enumeration of user accounts and shared folders over the network.
+- Disable Remote Assistance, Windows Connect Now (WPS) and auto-connect to suggested open hotspots.
+
 #### System
 
 - Disable the Drag Tray for sharing & moving files.

@@ -12,6 +12,11 @@
       "Icon": "&#xe770;"
     },
     {
+      "CategoryId": "NetworkSecurity",
+      "Name": "Network & Security",
+      "Icon": "&#xE774;"
+    },
+    {
       "CategoryId": "StartMenuSearch",
       "Name": "Start Menu & Search",
       "Icon": "&#xe8fc;"
@@ -540,6 +545,71 @@
       "UndoLabel": "Enable Microsoft experiments on this device",
       "ApplyUndoText": "Enabling Microsoft experiments",
       "RegistryUndoKey": "Enable_Experimentation.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableLLMNR",
+      "Label": "Disable LLMNR name resolution",
+      "ToolTip": "Link-Local Multicast Name Resolution is a fallback used when DNS cannot resolve a name. Attackers on the same network can answer these broadcasts to capture credentials, and it is one of the most common findings in internal security tests. Normal name resolution keeps working through DNS.",
+      "Category": "Network & Security",
+      "RegistryKey": "Disable_LLMNR.reg",
+      "ApplyText": "Disabling LLMNR name resolution",
+      "UndoLabel": "Enable LLMNR name resolution",
+      "ApplyUndoText": "Enabling LLMNR name resolution",
+      "RegistryUndoKey": "Enable_LLMNR.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableRemoteAssistance",
+      "Label": "Disable Remote Assistance",
+      "ToolTip": "Turns off Windows Remote Assistance, which lets someone else connect to and control this PC after an invitation. Remote Desktop is a separate feature and is not affected.",
+      "Category": "Network & Security",
+      "RegistryKey": "Disable_Remote_Assistance.reg",
+      "ApplyText": "Disabling Remote Assistance",
+      "UndoLabel": "Enable Remote Assistance",
+      "ApplyUndoText": "Enabling Remote Assistance",
+      "RegistryUndoKey": "Enable_Remote_Assistance.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "RestrictAnonymousAccess",
+      "Label": "Block anonymous enumeration of accounts & shares",
+      "ToolTip": "Stops unauthenticated users on the network from listing this PC's user accounts and shared folders, a common first step in an attack. Older NAS devices or software that relies on anonymous guest access to shares may stop connecting.",
+      "Category": "Network & Security",
+      "RegistryKey": "Restrict_Anonymous_Access.reg",
+      "ApplyText": "Blocking anonymous enumeration of accounts & shares",
+      "UndoLabel": "Allow anonymous enumeration of accounts & shares",
+      "ApplyUndoText": "Allowing anonymous enumeration of accounts & shares",
+      "RegistryUndoKey": "Allow_Anonymous_Access.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableWifiSense",
+      "Label": "Disable automatic connection to suggested open hotspots",
+      "ToolTip": "Stops Windows from automatically connecting to open Wi-Fi hotspots suggested by Microsoft. Your saved networks are unaffected.",
+      "Category": "Network & Security",
+      "RegistryKey": "Disable_Wifi_Sense.reg",
+      "ApplyText": "Disabling automatic connection to suggested open hotspots",
+      "UndoLabel": "Enable automatic connection to suggested open hotspots",
+      "ApplyUndoText": "Enabling automatic connection to suggested open hotspots",
+      "RegistryUndoKey": "Enable_Wifi_Sense.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableWindowsConnectNow",
+      "Label": "Disable Windows Connect Now (WPS)",
+      "ToolTip": "Turns off the Windows Connect Now wizards, which set up devices over Wi-Fi Protected Setup. WPS is widely considered insecure and is rarely needed.",
+      "Category": "Network & Security",
+      "RegistryKey": "Disable_Windows_Connect_Now.reg",
+      "ApplyText": "Disabling Windows Connect Now",
+      "UndoLabel": "Enable Windows Connect Now (WPS)",
+      "ApplyUndoText": "Enabling Windows Connect Now",
+      "RegistryUndoKey": "Enable_Windows_Connect_Now.reg",
       "MinVersion": null,
       "MaxVersion": null
     },
