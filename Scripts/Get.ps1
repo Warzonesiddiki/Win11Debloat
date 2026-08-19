@@ -14,6 +14,8 @@ param (
     [switch]$RunDefaults,
     [switch]$RunDefaultsLite,
     [switch]$RunSavedSettings,
+    [switch]$CheckDrift,
+    [switch]$RepairDrift,
     [string]$Config,
     [string]$Apps,
     [string]$AppRemovalTarget,

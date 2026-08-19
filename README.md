@@ -165,6 +165,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 - Ability to [apply changes to a different user](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#running-as-another-user), instead of the currently logged in user.
 - [Sysprep mode](https://github.com/Raphire/Win11Debloat/wiki/Advanced-Features#sysprep-mode) to apply changes to the Windows Default user profile. Which ensures, all new users will have the changes automatically applied to them.
+- Drift detection: check whether Windows has reverted any of your previously applied settings, and re-apply only those.
+
+  ```PowerShell
+  .\Win11Debloat.ps1 -CheckDrift    # report what Windows changed back (read-only)
+  .\Win11Debloat.ps1 -RepairDrift   # report, then re-apply only the reverted settings
+  ```
 
 ## Contributing
 
