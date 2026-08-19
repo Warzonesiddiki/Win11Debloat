@@ -188,6 +188,11 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 
 We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/master/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
 
+Before opening a pull request, run the test suite with `.\Scripts\Run-Tests.ps1 -Bootstrap`.
+On a real Windows machine you can also run `.\Scripts\Invoke-SmokeTest.ps1`, which sweeps
+every setting through the pipeline with `-WhatIf` without changing anything; see
+[docs/WINDOWS_SMOKE_TEST.md](docs/WINDOWS_SMOKE_TEST.md).
+
 ## License
 
 Win11Debloat is licensed under the MIT license. See the LICENSE file for more information.
