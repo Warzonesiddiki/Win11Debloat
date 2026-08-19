@@ -7,23 +7,23 @@ This reference lists every setting Win11Debloat can apply, the command-line swit
 selects it, and the exact registry values it writes, so you can see precisely what a
 setting does before you run it.
 
-119 settings across 13 categories.
+149 settings across 13 categories.
 
 ## Contents
 
-- [Privacy & Suggested Content](#privacy--suggested-content) (20)
+- [Privacy & Suggested Content](#privacy--suggested-content) (31)
 - [System](#system) (8)
-- [Network & Security](#network--security) (5)
+- [Network & Security](#network--security) (7)
 - [Start Menu & Search](#start-menu--search) (12)
 - [AI](#ai) (7)
 - [Windows Update](#windows-update) (4)
 - [Taskbar](#taskbar) (19)
-- [Appearance](#appearance) (3)
-- [File Explorer](#file-explorer) (20)
+- [Appearance](#appearance) (8)
+- [File Explorer](#file-explorer) (22)
 - [Gaming](#gaming) (2)
 - [Multi-tasking](#multi-tasking) (7)
 - [Optional Windows Features](#optional-windows-features) (2)
-- [Other](#other) (2)
+- [Other](#other) (12)
 - [Other settings](#other-settings) (8)
 
 ## Privacy & Suggested Content
@@ -31,8 +31,6 @@ setting does before you run it.
 ### Disable telemetry, tracking & targeted ads
 
 `-DisableTelemetry`
-
-This setting disables telemetry, diagnostic data collection, activity history, app-launch tracking, targeted ads and more. It limits the data that is sent to Microsoft about your device and usage. If you are a Windows Insider, updates may be blocked until optional diagnostic data collection is turned back on.
 
 Registry changes (`Disable_Telemetry.reg`):
 
@@ -63,8 +61,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable tips, tricks & suggested content throughout Windows
 
 `-DisableSuggestions`
-
-This setting removes many annoying distractions from Windows. This includes things like notifications, reminders and sync provider ads. It also prevents automated installation of suggested apps.
 
 Registry changes (`Disable_Windows_Suggestions.reg`):
 
@@ -97,8 +93,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableSettingsSync`
 
-Stops Windows from uploading your personalisation, passwords, accessibility and other settings to your Microsoft account and syncing them between devices.
-
 Registry changes (`Disable_Settings_Sync.reg`):
 
 | Key | Value | Set to |
@@ -121,8 +115,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableOfficeTelemetry`
 
-Stops Microsoft Office from sending telemetry and customer experience data. Only affects Office 2016 and newer, and has no effect if Office is not installed.
-
 Registry changes (`Disable_Office_Telemetry.reg`):
 
 | Key | Value | Set to |
@@ -138,8 +130,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable Windows Error Reporting
 
 `-DisableErrorReporting`
-
-Stops Windows from sending crash and error reports to Microsoft. Applications keep working normally, you simply stop uploading crash data.
 
 Registry changes (`Disable_Error_Reporting.reg`):
 
@@ -161,8 +151,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableCEIP`
 
-Opts out of the Windows Customer Experience Improvement Program, which periodically sends usage information to Microsoft.
-
 Registry changes (`Disable_CEIP.reg`):
 
 | Key | Value | Set to |
@@ -178,8 +166,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableCloudClipboard`
 
-Stops the contents of your clipboard from being uploaded to Microsoft and shared with your other devices. Local clipboard history is unaffected.
-
 Registry changes (`Disable_Cloud_Clipboard.reg`):
 
 | Key | Value | Set to |
@@ -193,8 +179,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable text message sync to the cloud
 
 `-DisableMessageSync`
-
-Stops Windows from backing up and syncing SMS and MMS messages to Microsoft's cloud service.
 
 Registry changes (`Disable_Message_Sync.reg`):
 
@@ -210,8 +194,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableLanguageListAccess`
 
-Prevents websites from reading your Windows language list to profile you. Pages will still display in your browser's language.
-
 Registry changes (`Disable_Language_List_Access.reg`):
 
 | Key | Value | Set to |
@@ -225,8 +207,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable camera access from the lock screen
 
 `-DisableLockscreenCamera`
-
-Prevents the camera from being opened from the lock screen, so nobody can take photos without unlocking the device.
 
 Registry changes (`Disable_Lockscreen_Camera.reg`):
 
@@ -242,8 +222,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableSpeechModelUpdates`
 
-Stops Windows from automatically downloading updated speech recognition models in the background. Speech recognition keeps working with the models already installed.
-
 Registry changes (`Disable_Speech_Model_Updates.reg`):
 
 | Key | Value | Set to |
@@ -258,8 +236,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableExperimentation`
 
-Stops Microsoft from running A/B experiments that change Windows behaviour and features on your device without asking.
-
 Registry changes (`Disable_Experimentation.reg`):
 
 | Key | Value | Set to |
@@ -273,8 +249,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Prevent Windows from reinstalling removed & promoted apps
 
 `-PreventAppReinstall`
-
-Windows silently reinstalls promoted apps such as Candy Crush, TikTok and Spotify, and can bring back preinstalled or OEM apps you removed, especially after a feature update. This turns off Microsoft consumer experiences and stops Content Delivery Manager from re-provisioning those apps. The machine-wide policy is fully honoured on Pro, Enterprise and Education; the per-user settings cover Home as well. This does not remove apps by itself, use the app removal options for that.
 
 Registry changes (`Prevent_App_Reinstall.reg`):
 
@@ -299,8 +273,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableNotifications`
 
-Disables native Windows notifications from apps and other senders, this includes notifications from apps like Discord, WhatsApp, Teams, and Slack.
-
 Registry changes (`Disable_Notifications.reg`):
 
 | Key | Value | Set to |
@@ -314,8 +286,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable Windows location services & app location access
 
 `-DisableLocationServices`
-
-This will turn off Windows Location Services and deny apps access to your location. This feature uses policies, which will lock down certain settings.
 
 Registry changes (`Disable_Location_Services.reg`):
 
@@ -331,8 +301,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableFindMyDevice`
 
-This will turn off the 'Find My Device' feature, which periodically sends your device's location to Microsoft. This feature uses policies, which will lock down certain settings.
-
 Registry changes (`Disable_Find_My_Device.reg`):
 
 | Key | Value | Set to |
@@ -346,8 +314,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable tips & tricks on the lock screen
 
 `-DisableLockscreenTips`
-
-This will turn off the lockscreen spotlight option and disable the tips, tricks and fun facts that appear on the lock screen.
 
 Registry changes (`Disable_Lockscreen_Tips.reg`):
 
@@ -364,8 +330,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableDesktopSpotlight`
 
-This will turn off the 'Windows Spotlight' feature for the desktop background, which shows different background images and occasionally tips and fun facts on the desktop. This feature uses policies, which will lock down certain settings.
-
 Registry changes (`Disable_Desktop_Spotlight.reg`):
 
 | Key | Value | Set to |
@@ -379,8 +343,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable ads, suggestions and newsfeed in Edge
 
 `-DisableEdgeAds`
-
-This will turn off various distractions from Microsoft Edge such as ads, suggestions and the MSN news feed. This feature uses policies, which will lock down certain settings.
 
 Registry changes (`Disable_Edge_Ads_And_Suggestions.reg`):
 
@@ -408,9 +370,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableSettings365Ads`
 
-This will turn off the Microsoft 365 Copilot ads that appear in the Settings Home page.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Settings_365_Ads.reg`):
 
@@ -422,15 +382,174 @@ Reverting: unchecking this setting applies `Enable_Settings_365_Ads.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
+### Disable NVIDIA telemetry
+
+`-DisableNvidiaTelemetry`
+
+Registry changes (`Disable_Nvidia_Telemetry.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\NVIDIA Corporation\NVControlPanel2\Client` | `OptInOrOutPreference` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Nvidia_Telemetry.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Deny app access to diagnostics, location and account info
+
+`-DenyAppPermissions`
+
+Registry changes (`Deny_App_Permissions.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics` | `Value` | "Deny" |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location` | `Value` | "Deny" |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation` | `Value` | "Deny" |
+
+Reverting: unchecking this setting applies `Allow_App_Permissions.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable device monitoring
+
+`-DisableDeviceMonitoring`
+
+Registry changes (`Disable_Device_Monitoring.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\DeviceHealthAttestationService` | `EnableDeviceHealthAttestationService` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Device_Monitoring.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Program Compatibility Assistant telemetry
+
+`-DisableProgramCompatibilityAssistant`
+
+Registry changes (`Disable_PCA.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat` | `AITEnable` | 0 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat` | `AllowTelemetry` | 0 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat` | `DisableEngine` | 1 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat` | `DisableInventory` | 1 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat` | `DisablePCA` | 1 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AppCompat` | `DisableUAR` | 1 |
+
+Reverting: unchecking this setting applies `Enable_PCA.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Customer Experience Improvement tracking
+
+`-DisableCustomerExperienceImprovement`
+
+Registry changes (`Disable_CEIP_Tracking.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}` | `ScenarioExecutionEnabled` | 0 |
+
+Reverting: unchecking this setting applies `Enable_CEIP_Tracking.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable the Windows privacy experience
+
+`-DisablePrivacyExperience`
+
+Registry changes (`Disable_Privacy_Experience.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OOBE` | `DisablePrivacyExperience` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Privacy_Experience.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Resultant Set of Policy logging
+
+`-DisableRsopLogging`
+
+Registry changes (`Disable_RSOP_Logging.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System` | `RSoPLogging` | 0 |
+
+Reverting: unchecking this setting applies `Enable_RSOP_Logging.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable user activity tracking
+
+`-DisableUserTracking`
+
+Registry changes (`Disable_User_Tracking.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `NoInstrumentation` | 1 |
+
+Reverting: unchecking this setting applies `Enable_User_Tracking.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disallow Microsoft account sign-in
+
+`-DisallowMicrosoftAccounts`
+
+Registry changes (`Disallow_Microsoft_Accounts.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System` | `NoConnectedUser` | 1 |
+
+Reverting: unchecking this setting applies `Allow_Microsoft_Accounts.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Windows activation telemetry
+
+`-DisableActivationTelemetry`
+
+Registry changes (`Disable_Activation_Telemetry.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform` | `NoGenTicket` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Activation_Telemetry.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable diagnostic tracing (DiagTrack)
+
+`-DisableDiagnosticTracing`
+
+Registry changes (`Disable_Diagnostic_Tracing.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Diagnostics\Performance` | `DisableDiagnosticTracing` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Diagnostic_Tracing.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
 ## System
 
 ### Disable 'Drag Tray' for sharing & moving files
 
 `-DisableDragTray`
 
-The Drag Tray is a new feature for sharing & moving files in Windows 11, it appears at the top of the screen when dragging files.
-
-*Only offered on Windows build 26200 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Share_Drag_Tray.reg`):
 
@@ -446,9 +565,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-RevertContextMenu`
 
-This will restore the classic Windows 10 style context menu, which is normally hidden behind the 'Show more options' entry in the new Windows 11 context menu.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Show_More_Options_Context_Menu.reg`):
 
@@ -463,8 +580,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable Enhance Pointer Precision (mouse acceleration)
 
 `-DisableMouseAcceleration`
-
-This will disable mouse acceleration which is enabled by default in Windows. This makes mouse movement more consistent and predictable.
 
 Registry changes (`Disable_Enhance_Pointer_Precision.reg`):
 
@@ -482,9 +597,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableStickyKeys`
 
-This will prevent the Sticky Keys dialog from appearing when you press the Shift key 5 times in a row.
-
-*Only offered on Windows build 26100 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Sticky_Keys_Shortcut.reg`):
 
@@ -500,9 +613,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableStorageSense`
 
-This will disable Storage Sense, which automatically frees up disk space by deleting temporary files, emptying the recycle bin and cleaning up files in the Downloads folder.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Storage_Sense.reg`):
 
@@ -518,8 +629,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableFastStartup`
 
-Fast Start-up helps your PC start faster after shutdown by saving a system image to disk. Disabling Fast Start-up can help with certain issues, but may result in slightly longer boot times.
-
 Registry changes (`Disable_Fast_Startup.reg`):
 
 | Key | Value | Set to |
@@ -534,9 +643,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableBitlockerAutoEncryption`
 
-For devices that support it, Windows 11 automatically enables BitLocker device encryption. Disabling this will turn off automatic encryption of the device, but you can still manually enable BitLocker encryption if desired. Drives that are already encrypted with BitLocker will remain encrypted when this setting is applied.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Bitlocker_Auto_Encryption.reg`):
 
@@ -552,9 +659,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableModernStandbyNetworking`
 
-By default, devices that support Modern Standby maintain network connectivity while in sleep mode. Disabling network connectivity during Modern Standby can help save battery life.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Modern_Standby_Networking.reg`):
 
@@ -573,8 +678,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableLLMNR`
 
-Link-Local Multicast Name Resolution is a fallback used when DNS cannot resolve a name. Attackers on the same network can answer these broadcasts to capture credentials, and it is one of the most common findings in internal security tests. Normal name resolution keeps working through DNS.
-
 Registry changes (`Disable_LLMNR.reg`):
 
 | Key | Value | Set to |
@@ -588,8 +691,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable Remote Assistance
 
 `-DisableRemoteAssistance`
-
-Turns off Windows Remote Assistance, which lets someone else connect to and control this PC after an invitation. Remote Desktop is a separate feature and is not affected.
 
 Registry changes (`Disable_Remote_Assistance.reg`):
 
@@ -605,8 +706,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Block anonymous enumeration of accounts & shares
 
 `-RestrictAnonymousAccess`
-
-Stops unauthenticated users on the network from listing this PC's user accounts and shared folders, a common first step in an attack. Older NAS devices or software that relies on anonymous guest access to shares may stop connecting.
 
 Registry changes (`Restrict_Anonymous_Access.reg`):
 
@@ -624,8 +723,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableWifiSense`
 
-Stops Windows from automatically connecting to open Wi-Fi hotspots suggested by Microsoft. Your saved networks are unaffected.
-
 Registry changes (`Disable_Wifi_Sense.reg`):
 
 | Key | Value | Set to |
@@ -640,8 +737,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableWindowsConnectNow`
 
-Turns off the Windows Connect Now wizards, which set up devices over Wi-Fi Protected Setup. WPS is widely considered insecure and is rarely needed.
-
 Registry changes (`Disable_Windows_Connect_Now.reg`):
 
 | Key | Value | Set to |
@@ -653,13 +748,41 @@ Reverting: unchecking this setting applies `Enable_Windows_Connect_Now.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
+### Enable DNS over HTTPS (DoH)
+
+`-EnableDnsOverHttps`
+
+Registry changes (`Enable_DNS_Over_HTTPS.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters` | `EnableAutoDoh` | 2 |
+
+Reverting: unchecking this setting applies `Disable_DNS_Over_HTTPS.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable SMB bandwidth throttling
+
+`-DisableSmbBandwidthThrottling`
+
+Registry changes (`Disable_SMB_Throttling.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters` | `DisableBandwidthThrottling` | 1 |
+
+Reverting: unchecking this setting applies `Enable_SMB_Throttling.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
 ## Start Menu & Search
 
 ### Remove all pinned apps from the start menu for this user only
 
 `-ClearStart`
 
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
@@ -667,7 +790,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-ClearStartAllUsers`
 
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
@@ -675,9 +798,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-DisableStartRecommended`
 
-This will hide the recommended section in the start menu, which shows recently added apps, recently opened files and app recommendations. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Start_Recommended.reg`):
 
@@ -693,9 +814,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableStartAllApps`
 
-This will hide the 'All Apps' section in the start menu, which shows all installed apps. WARNING: Hiding this section may make it harder to find installed apps on your system. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 26200 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Start_All_Apps.reg`):
 
@@ -711,9 +830,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableStartPhoneLink`
 
-This will remove the Phone Link integration in the start menu when you have a mobile device linked to your PC.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Phone_Link_In_Start.reg`):
 
@@ -728,8 +845,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable Bing web search & Copilot integration in search
 
 `-DisableBing`
-
-This will turn off Bing web search results and Copilot integration in the Windows search experience. This feature uses policies, which will lock down certain settings.
 
 Registry changes (`Disable_Bing_Cortana_In_Search.reg`):
 
@@ -747,8 +862,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableSearchHistory`
 
-Stops Windows from saving a history of what you search for on this device. Searching keeps working, it is simply not recorded.
-
 Registry changes (`Disable_Search_History.reg`):
 
 | Key | Value | Set to |
@@ -762,8 +875,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable search highlights
 
 `-DisableSearchHighlights`
-
-Removes the rotating branded content, holidays and trivia that Windows shows in the search box and search menu.
 
 Registry changes (`Disable_Search_Highlights.reg`):
 
@@ -779,9 +890,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableStoreSearchSuggestions`
 
-This will disable the Microsoft Store app suggestions in Windows search.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
@@ -789,9 +898,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-StartAllAppsCategory`
 
-This will set the All Apps section in the start menu to show apps grouped by category.
-
-*Only offered on Windows build 26200 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Start_AllApps_Category.reg`):
 
@@ -808,9 +915,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-StartAllAppsGrid`
 
-This will set the All Apps section in the start menu to show apps in an alphabetical grid layout.
-
-*Only offered on Windows build 26200 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Start_AllApps_Grid.reg`):
 
@@ -827,9 +932,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-StartAllAppsList`
 
-This will set the All Apps section in the start menu to show apps in an alphabetical list layout.
-
-*Only offered on Windows build 26200 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Start_AllApps_List.reg`):
 
@@ -848,9 +951,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableCopilot`
 
-This will disable and uninstall Microsoft Copilot, Windows' built-in AI assistant.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Copilot.reg`):
 
@@ -868,9 +969,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableRecall`
 
-This will disable Windows Recall, an AI-powered feature that provides quick access to recently used files, apps and activities. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_AI_Recall.reg`):
 
@@ -889,9 +988,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableClickToDo`
 
-This will disable Click To Do, which provides AI-powered text and image analysis features in Windows. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Click_to_Do.reg`):
 
@@ -908,9 +1005,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableAISvcAutoStart`
 
-This will set the WSAIFabricSvc service to manual startup, preventing the service from starting automatically with Windows.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_AI_Service_Auto_Start.reg`):
 
@@ -926,9 +1021,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableEdgeAI`
 
-This will turn off AI features in Microsoft Edge, such as the AI-powered sidebar and Copilot features. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Edge_AI_Features.reg`):
 
@@ -951,9 +1044,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisablePaintAI`
 
-This will turn off AI features in Paint, such as the AI-powered image generation and editing tools. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Paint_AI_Features.reg`):
 
@@ -973,9 +1064,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableNotepadAI`
 
-This will turn off AI features in Notepad, such as the AI-powered writing suggestions. This feature uses policies, which will lock down certain settings.
-
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Notepad_AI_Features.reg`):
 
@@ -993,8 +1082,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableUpdateASAP`
 
-This will prevent your PC from being among the first to receive new non-security updates. Your PC will still receive these updates eventually.
-
 Registry changes (`Disable_Update_ASAP.reg`):
 
 | Key | Value | Set to |
@@ -1008,8 +1095,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Prevent automatic restarts after updates while signed in
 
 `-PreventUpdateAutoReboot`
-
-This will prevent your PC from automatically restarting after updates while any user is signed in.
 
 Registry changes (`Prevent_Auto_Reboot.reg`):
 
@@ -1025,8 +1110,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableDeliveryOptimization`
 
-This will prevent your PC from sharing downloaded updates with other PCs on the local network or on the internet. This also prevents your PC from downloading updates from other PCs.
-
 Registry changes (`Disable_Delivery_Optimization.reg`):
 
 | Key | Value | Set to |
@@ -1040,8 +1123,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Prevent Windows from auto-installing device companion apps
 
 `-DisableDeviceAutoAppDownload`
-
-Stops Windows from silently installing device companion apps via Windows Update when you connect certain devices, like monitors from LG and Alienware. These devices will still work as expected, this only stops Windows Update from automatically installing additional apps without consent.
 
 Registry changes (`Disable_Device_Auto_App_Download.reg`):
 
@@ -1059,9 +1140,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-TaskbarAlignLeft`
 
-By default, Windows 11 has the taskbar buttons centered. Enabling this setting will move the taskbar buttons to the left, similar to previous versions of Windows.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Align_Taskbar_Left.reg`):
 
@@ -1077,7 +1156,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideSearchTb`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Hide_Search_Taskbar.reg`):
 
@@ -1093,7 +1172,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-ShowSearchIconTb`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Show_Search_Icon.reg`):
 
@@ -1109,7 +1188,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-ShowSearchLabelTb`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Show_Search_Icon_And_Label.reg`):
 
@@ -1125,7 +1204,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-ShowSearchBoxTb`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Show_Search_Box.reg`):
 
@@ -1141,9 +1220,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideTaskview`
 
-This will disable the 'Task view' button on the taskbar, which allows you to see all your open windows and virtual desktops.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Hide_Taskview_Taskbar.reg`):
 
@@ -1159,17 +1236,13 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableWidgets`
 
-This will disable the widgets features in Windows, including the widgets button on the taskbar and the widgets that can appear on the lock screen.
-
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
 ### Hide Chat (meet now) icon on the taskbar
 
 `-HideChat`
 
-This will disable the Chat (meet now) icon on the taskbar.
-
-*Only offered on Windows build 22621 and older.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Chat_Taskbar.reg`):
 
@@ -1186,9 +1259,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-EnableEndTask`
 
-When enabled, adds an 'End Task' option to the right-click context menu for apps in the taskbar, allowing you to quickly force close apps.
-
-*Only offered on Windows build 22631 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Enable_End_Task.reg`):
 
@@ -1204,9 +1275,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-EnableLastActiveClick`
 
-When enabled, clicking on an app in the taskbar will switch to the last active window of that app, instead of only showing the thumbnail preview.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Enable_Last_Active_Click.reg`):
 
@@ -1222,7 +1291,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-CombineTaskbarAlways`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Combine_Taskbar_Always.reg`):
 
@@ -1238,7 +1307,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-CombineMMTaskbarAlways`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Combine_MMTaskbar_Always.reg`):
 
@@ -1254,7 +1323,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-CombineTaskbarWhenFull`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Combine_Taskbar_When_Full.reg`):
 
@@ -1270,7 +1339,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-CombineMMTaskbarWhenFull`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Combine_MMTaskbar_When_Full.reg`):
 
@@ -1286,7 +1355,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-CombineTaskbarNever`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Combine_Taskbar_Never.reg`):
 
@@ -1302,7 +1371,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-CombineMMTaskbarNever`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Combine_MMTaskbar_Never.reg`):
 
@@ -1318,7 +1387,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-MMTaskbarModeAll`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`MMTaskbarMode_All.reg`):
 
@@ -1334,7 +1403,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-MMTaskbarModeMainActive`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`MMTaskbarMode_Main_Active.reg`):
 
@@ -1350,7 +1419,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-MMTaskbarModeActive`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`MMTaskbarMode_Active.reg`):
 
@@ -1368,8 +1437,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-EnableDarkMode`
 
-This will set the app and system theme to dark mode.
-
 Registry changes (`Enable_Dark_Mode.reg`):
 
 | Key | Value | Set to |
@@ -1385,8 +1452,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableTransparency`
 
-This will disable transparency effects on Windows and interfaces. Which can help improve performance on older hardware.
-
 Registry changes (`Disable_Transparency.reg`):
 
 | Key | Value | Set to |
@@ -1401,8 +1466,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableAnimations`
 
-This will disable animations and some visual effects in Windows, which can make the interface feel snappier, especially on older hardware.
-
 Registry changes (`Disable_Animations.reg`):
 
 | Key | Value | Set to |
@@ -1410,6 +1473,85 @@ Registry changes (`Disable_Animations.reg`):
 | `HKEY_CURRENT_USER\Control Panel\Desktop` | `UserPreferencesMask` | hex:90,12,07,80,10,00,00,00 |
 
 Reverting: unchecking this setting applies `Enable_Animations.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Dynamic Lighting (HID lighting)
+
+`-DisableDynamicLighting`
+
+Registry changes (`Disable_Dynamic_Lighting.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Lighting` | `AmbientLightingEnabled` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Dynamic_Lighting.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable visual effects for best performance
+
+`-DisableVisualEffects`
+
+Registry changes (`Disable_Visual_Effects.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `FontSmoothing` | "2" |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `DragFullWindows` | "1" |
+| `HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics` | `MinAnimate` | "0" |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `ListviewAlphaSelect` | 1 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `IconsOnly` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `TaskbarAnimations` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `ListviewShadow` | 1 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects` | `VisualFXSetting` | 3 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM` | `EnableAeroPeek` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM` | `AlwaysHibernateThumbnails` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Visual_Effects.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Aero Shake
+
+`-DisableAeroShake`
+
+Registry changes (`Disable_Aero_Shake.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `DisallowShaking` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Aero_Shake.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable desktop peek (Aero Peek)
+
+`-DisableDesktopPeek`
+
+Registry changes (`Disable_Desktop_Peek.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `DisablePreviewDesktop` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Desktop_Peek.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Use compact mode in File Explorer
+
+`-UseCompactModeExplorer`
+
+Registry changes (`Use_Compact_Mode.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `UseCompactMode` | 1 |
+
+Reverting: unchecking this setting applies `Use_Ribbon_Mode.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
@@ -1475,8 +1617,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-ShowKnownFileExt`
 
-This will show file extensions for known file types. By default, Windows hides file extensions for known file types which can lead to confusion and security risks.
-
 Registry changes (`Show_Extensions_For_Known_File_Types.reg`):
 
 | Key | Value | Set to |
@@ -1490,8 +1630,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Show hidden files, folders and drives
 
 `-ShowHiddenFolders`
-
-By default, Windows hides certain files, folders and drives to prevent accidental modification or deletion. Turn this on to show all files in File Explorer.
 
 Registry changes (`Show_Hidden_Folders.reg`):
 
@@ -1507,13 +1645,10 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideDupliDrive`
 
-By default, Windows shows removable drives both under 'This PC' and in the navigation pane with its own entry. Enable this setting to only show removable drives under 'This PC'.
-
 Registry changes (`Hide_duplicate_removable_drives_from_navigation_pane_of_File_Explorer.reg`):
 
 | Key | Value | Set to |
 | --- | --- | --- |
-| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}` |  | the whole key is deleted |
 
 Reverting: unchecking this setting applies `Show_duplicate_removable_drives_in_navigation_pane_of_File_Explorer.reg`.
 
@@ -1523,9 +1658,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideHome`
 
-Hides the 'Home' section from the File Explorer navigation pane.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Hide_Home_from_Explorer.reg`):
 
@@ -1551,9 +1684,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideGallery`
 
-Hides the 'Gallery' section from the File Explorer navigation pane.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Hide_Gallery_from_Explorer.reg`):
 
@@ -1578,8 +1709,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideOnedrive`
 
-Hides the 'OneDrive' section from the File Explorer navigation pane.
-
 Registry changes (`Hide_Onedrive_Folder.reg`):
 
 | Key | Value | Set to |
@@ -1603,16 +1732,12 @@ New user profiles: covered when running in Sysprep mode.
 
 `-Hide3dObjects`
 
-Hides the '3D objects' folder from the File Explorer navigation pane.
-
-*Only offered on Windows build 21999 and older.*
+*Version-gated setting.*
 
 Registry changes (`Hide_3D_Objects_Folder.reg`):
 
 | Key | Value | Set to |
 | --- | --- | --- |
-| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}` |  | the whole key is deleted |
-| `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}` |  | the whole key is deleted |
 
 Reverting: unchecking this setting applies `Show_3D_Objects_Folder.reg`.
 
@@ -1622,16 +1747,12 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideMusic`
 
-Hides the 'Music' folder from the File Explorer navigation pane.
-
-*Only offered on Windows build 21999 and older.*
+*Version-gated setting.*
 
 Registry changes (`Hide_Music_Folder.reg`):
 
 | Key | Value | Set to |
 | --- | --- | --- |
-| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}` |  | the whole key is deleted |
-| `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}` |  | the whole key is deleted |
 
 Reverting: unchecking this setting applies `Show_Music_Folder.reg`.
 
@@ -1641,9 +1762,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-AddFoldersToThisPC`
 
-This setting will add common folders like Desktop, Documents, Downloads, Music, Pictures and Videos back to the 'This PC' page in File Explorer.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Add_All_Folders_Under_This_PC.reg`):
 
@@ -1671,16 +1790,12 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideIncludeInLibrary`
 
-Hides the 'Include in library' option from the File Explorer context menu.
-
-*Only offered on Windows build 21999 and older.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Include_in_library_from_context_menu.reg`):
 
 | Key | Value | Set to |
 | --- | --- | --- |
-| `HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location` |  | the whole key is deleted |
-| `HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location` |  | the whole key is deleted |
 
 Reverting: unchecking this setting applies `Enable_Include_in_library_in_context_menu.reg`.
 
@@ -1690,20 +1805,12 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideGiveAccessTo`
 
-Hides the 'Give access to' option from the File Explorer context menu.
-
-*Only offered on Windows build 21999 and older.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Give_access_to_context_menu.reg`):
 
 | Key | Value | Set to |
 | --- | --- | --- |
-| `HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing` |  | the whole key is deleted |
-| `HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing` |  | the whole key is deleted |
-| `HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Sharing` |  | the whole key is deleted |
-| `HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Sharing` |  | the whole key is deleted |
-| `HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing` |  | the whole key is deleted |
-| `HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing` |  | the whole key is deleted |
 
 Reverting: unchecking this setting applies `Enable_Give_access_to_context_menu.reg`.
 
@@ -1713,15 +1820,12 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideShare`
 
-Hides the 'Share' option from the File Explorer context menu.
-
-*Only offered on Windows build 21999 and older.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Share_from_context_menu.reg`):
 
 | Key | Value | Set to |
 | --- | --- | --- |
-| `HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing` |  | the whole key is deleted |
 
 Reverting: unchecking this setting applies `Enable_Share_in_context_menu.reg`.
 
@@ -1730,8 +1834,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Show drive letters before drive label
 
 `-ShowDriveLettersFirst`
-
-This setting will show drive letters before the drive label in File Explorer.
 
 Registry changes (`Show_Drive_Letters_First.reg`):
 
@@ -1747,8 +1849,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-ShowDriveLettersLast`
 
-This setting will show drive letters after the drive label in File Explorer (Default Windows behavior).
-
 Registry changes (`Show_Drive_Letters_Last.reg`):
 
 | Key | Value | Set to |
@@ -1762,8 +1862,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Show network drive letters before drive label
 
 `-ShowNetworkDriveLettersFirst`
-
-This setting will show only network drive letters before the drive label in File Explorer.
 
 Registry changes (`Show_Network_Drive_Letters_First.reg`):
 
@@ -1779,8 +1877,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideDriveLetters`
 
-This setting will hide all drive letters from the File Explorer navigation pane and 'This PC'.
-
 Registry changes (`Hide_Drive_Letters.reg`):
 
 | Key | Value | Set to |
@@ -1791,13 +1887,39 @@ Reverting: unchecking this setting applies `Show_Drive_Letters_Last.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
+### Hide recent files in Quick Access
+
+`-HideRecentFiles`
+
+Registry changes (`Hide_Recent_Files.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `ShowRecent` | 0 |
+
+Reverting: unchecking this setting applies `Show_Recent_Files.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Optimise the thumbnail cache size
+
+`-SetThumbnailCacheSize`
+
+Registry changes (`Set_Thumbnail_Cache_Size.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer` | `ThumbnailCacheMaxSizeMb` | 200 |
+
+Reverting: unchecking this setting applies `Default_Thumbnail_Cache_Size.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
 ## Gaming
 
 ### Disable Xbox game/screen recording
 
 `-DisableDVR`
-
-This will disable the Xbox game/screen recording features included with the Game Bar app. This feature uses policies, which will lock down certain settings.
 
 Registry changes (`Disable_DVR.reg`):
 
@@ -1814,8 +1936,6 @@ New user profiles: covered when running in Sysprep mode.
 ### Disable Game Bar integration
 
 `-DisableGameBarIntegration`
-
-This will disable the Game Bar integration with games and controllers. This stops annoying ms-gamebar popups when launching games or connecting a controller.
 
 Registry changes (`Disable_Game_Bar_Integration.reg`):
 
@@ -1841,8 +1961,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableWindowSnapping`
 
-This will turn off the ability to snap windows to the sides or corners of the screen.
-
 Registry changes (`Disable_Window_Snapping.reg`):
 
 | Key | Value | Set to |
@@ -1857,9 +1975,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableSnapAssist`
 
-This will turn off app suggestions when you snap windows to the sides or corners of the screen.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Snap_Assist.reg`):
 
@@ -1875,9 +1991,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableSnapLayouts`
 
-This will turn off the snap layout flyout that appears when you hover over the maximize button or drag windows to the top of the screen.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Snap_Layouts.reg`):
 
@@ -1894,7 +2008,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-HideTabsInAltTab`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Hide_Tabs_In_Alt_Tab.reg`):
 
@@ -1910,7 +2024,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-Show3TabsInAltTab`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Show_3_Tabs_In_Alt_Tab.reg`):
 
@@ -1926,7 +2040,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-Show5TabsInAltTab`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Show_5_Tabs_In_Alt_Tab.reg`):
 
@@ -1942,7 +2056,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-Show20TabsInAltTab`
 
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Show_20_Tabs_In_Alt_Tab.reg`):
 
@@ -1960,9 +2074,7 @@ New user profiles: covered when running in Sysprep mode.
 
 `-EnableWindowsSandbox`
 
-Windows Sandbox is a lightweight desktop environment for safely running applications in isolation. Software installed inside the Windows Sandbox environment remains 'sandboxed' and runs separately from the host machine. Only supported on Windows 11 Pro, Workstation, and Enterprise editions.
-
-*Only offered on Windows build 22483 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
@@ -1970,9 +2082,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-EnableWindowsSubsystemForLinux`
 
-Windows Subsystem for Linux allows you to run a Linux environment directly on Windows without the need for a virtual machine.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
@@ -1982,9 +2092,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-DisableSettingsHome`
 
-Removes the 'Home' page from the Settings app.
-
-*Only offered on Windows build 22000 and newer.*
+*Version-gated setting.*
 
 Registry changes (`Disable_Settings_Home.reg`):
 
@@ -2000,8 +2108,6 @@ New user profiles: covered when running in Sysprep mode.
 
 `-DisableBraveBloat`
 
-This will disable Brave's built-in AI features, Crypto wallet, News, Rewards, Talk and VPN. This feature uses policies, which will lock down certain settings.
-
 Registry changes (`Disable_Brave_Bloat.reg`):
 
 | Key | Value | Set to |
@@ -2014,6 +2120,153 @@ Registry changes (`Disable_Brave_Bloat.reg`):
 | `HKEY_LOCAL_MACHINE\Software\Policies\BraveSoftware\Brave` | `BraveNewsDisabled` | 1 |
 
 Reverting: unchecking this setting applies `Enable_Brave_Bloat.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Cross-Device Resume
+
+`-DisableCrossDeviceResume`
+
+Registry changes (`Disable_Cross_Device_Resume.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration` | `IsResumeAllowed` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\PolicyManager\default\Connectivity\DisableCrossDeviceResume` | `Value` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Cross_Device_Resume.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable tips in the Settings app
+
+`-DisableSettingsTips`
+
+Registry changes (`Disable_Settings_Tips.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowOnlineTips` | `value` | 0 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `AllowOnlineTips` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Settings_Tips.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Enable long file paths (NTFS)
+
+`-EnableLongPaths`
+
+Registry changes (`Enable_Long_Paths.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem` | `LongPathsEnabled` | 1 |
+
+Reverting: unchecking this setting applies `Disable_Long_Paths.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Use classic search in File Explorer
+
+`-UseClassicSearch`
+
+Registry changes (`Use_Classic_Search.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{1d64637d-31e9-4b06-9124-e83fb178ac6e}\TreatAs` | `(Default)` | "{64bc32b5-4eec-4de7-972d-bd8bd0324537}" |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{1d64637d-31e9-4b06-9124-e83fb178ac6e}\TreatAs` | `(Default)` | "{64bc32b5-4eec-4de7-972d-bd8bd0324537}" |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes\CLSID\{1d64637d-31e9-4b06-9124-e83fb178ac6e}\TreatAs` | `(Default)` | "{64bc32b5-4eec-4de7-972d-bd8bd0324537}" |
+
+Reverting: unchecking this setting applies `Use_Modern_Search.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Nearby Sharing
+
+`-DisableNearbySharing`
+
+Registry changes (`Disable_Nearby_Sharing.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CDP\SettingsPage` | `BluetoothLastDisabledNearShare` | 0 |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CDP` | `NearShareChannelUserAuthzPolicy` | 0 |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\CDP` | `CdpSessionUserAuthzPolicy` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Nearby_Sharing.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable News and Interests
+
+`-DisableNewsAndInterests`
+
+Registry changes (`Disable_News_And_Interests.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds` | `EnableFeeds` | 0 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh` | `AllowNewsAndInterests` | 0 |
+
+Reverting: unchecking this setting applies `Enable_News_And_Interests.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Tablet Mode
+
+`-DisableTabletMode`
+
+Registry changes (`Disable_Tablet_Mode.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell` | `SignInMode` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Tablet_Mode.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable low disk space warnings
+
+`-DisableLowDiskWarning`
+
+Registry changes (`Disable_Low_Disk_Warning.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `NoLowDiskSpaceChecks` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Low_Disk_Warning.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable startup delay for apps
+
+`-DisableStartupDelay`
+
+Registry changes (`Disable_Startup_Delay.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize` | `StartupDelayInMSec` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Startup_Delay.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable WPBT (firmware-injected binaries)
+
+`-DisableWpbt`
+
+Registry changes (`Disable_WPBT.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager` | `DisableWpbtExecution` | 1 |
+
+Reverting: unchecking this setting applies `Enable_WPBT.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
@@ -2055,7 +2308,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-ReplaceStart`
 
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
@@ -2063,7 +2316,7 @@ This setting is applied by dedicated logic in the script rather than by a regist
 
 `-ReplaceStartAllUsers`
 
-*Only offered on Windows build 22621 and newer.*
+*Version-gated setting.*
 
 This setting is applied by dedicated logic in the script rather than by a registry file.
 
