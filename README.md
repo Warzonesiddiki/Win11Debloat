@@ -89,6 +89,9 @@ Below is an overview of the key features and functionality offered by Win11Deblo
 - Disable tips, tricks, suggestions & ads across Windows, the lock screen and Microsoft Edge.
 - Prevent Windows from reinstalling removed apps and silently installing promoted apps.
 - Disable Windows location services, app location access and Find My Device location tracking.
+- Disable Windows Error Reporting, the Customer Experience Improvement Program and Microsoft experiments.
+- Disable Microsoft Office telemetry, settings sync, clipboard sync and text message cloud sync.
+- Stop websites reading your language list, and block camera access from the lock screen.
 - Hide Microsoft 365 ads on the Settings 'Home' page, or hide the 'Home' page entirely.
 
 #### AI Features
