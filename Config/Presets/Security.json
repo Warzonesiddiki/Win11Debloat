@@ -1,0 +1,40 @@
+{
+  "Version": "1.0",
+  "Description": "Reduces network attack surface. Aimed at machines on shared or untrusted networks.",
+  "Deployment": [
+    {
+      "Name": "CreateRestorePoint",
+      "Value": true
+    },
+    {
+      "Name": "SkipRegistryBackup",
+      "Value": false
+    }
+  ],
+  "Tweaks": [
+    {
+      "Name": "DisableLLMNR",
+      "Value": true
+    },
+    {
+      "Name": "DisableRemoteAssistance",
+      "Value": true
+    },
+    {
+      "Name": "RestrictAnonymousAccess",
+      "Value": true
+    },
+    {
+      "Name": "DisableWifiSense",
+      "Value": true
+    },
+    {
+      "Name": "DisableWindowsConnectNow",
+      "Value": true
+    },
+    {
+      "Name": "DisableLockscreenCamera",
+      "Value": true
+    }
+  ]
+}

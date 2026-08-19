@@ -190,6 +190,18 @@ Below is an overview of the key features and functionality offered by Win11Deblo
   .\Win11Debloat.ps1 -RunDefaults -Silent -RunSummaryPath "C:\reports\pc01.json"
   ```
 
+- Ready-made presets for common goals, applied through the normal config import.
+
+  ```PowerShell
+  .\Win11Debloat.ps1 -Config "Config\Presets\Privacy.json"    # data collection & cloud sync
+  .\Win11Debloat.ps1 -Config "Config\Presets\AI-Free.json"    # Copilot, Recall, Click to Do, AI in apps
+  .\Win11Debloat.ps1 -Config "Config\Presets\Security.json"   # network attack surface
+  .\Win11Debloat.ps1 -Config "Config\Presets\Minimal.json"    # ads & suggested content only
+  ```
+
+  Each preset requests a restore point, changes nothing else, and can be reverted the
+  same way as any other setting. Open the file to see exactly what it selects.
+
 ## Contributing
 
 We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/master/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.

@@ -1,0 +1,44 @@
+{
+  "Version": "1.0",
+  "Description": "The least intrusive set: removes advertising and suggested content only. No interface changes, no apps removed.",
+  "Deployment": [
+    {
+      "Name": "CreateRestorePoint",
+      "Value": true
+    },
+    {
+      "Name": "SkipRegistryBackup",
+      "Value": false
+    }
+  ],
+  "Tweaks": [
+    {
+      "Name": "DisableSuggestions",
+      "Value": true
+    },
+    {
+      "Name": "PreventAppReinstall",
+      "Value": true
+    },
+    {
+      "Name": "DisableLockscreenTips",
+      "Value": true
+    },
+    {
+      "Name": "DisableDesktopSpotlight",
+      "Value": true
+    },
+    {
+      "Name": "DisableSettings365Ads",
+      "Value": true
+    },
+    {
+      "Name": "DisableEdgeAds",
+      "Value": true
+    },
+    {
+      "Name": "DisableStoreSearchSuggestions",
+      "Value": true
+    }
+  ]
+}
