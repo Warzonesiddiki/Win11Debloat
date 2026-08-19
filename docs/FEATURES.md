@@ -7,23 +7,23 @@ This reference lists every setting Win11Debloat can apply, the command-line swit
 selects it, and the exact registry values it writes, so you can see precisely what a
 setting does before you run it.
 
-149 settings across 13 categories.
+188 settings across 13 categories.
 
 ## Contents
 
-- [Privacy & Suggested Content](#privacy--suggested-content) (31)
+- [Privacy & Suggested Content](#privacy--suggested-content) (32)
 - [System](#system) (8)
-- [Network & Security](#network--security) (7)
+- [Network & Security](#network--security) (9)
 - [Start Menu & Search](#start-menu--search) (12)
 - [AI](#ai) (7)
 - [Windows Update](#windows-update) (4)
 - [Taskbar](#taskbar) (19)
-- [Appearance](#appearance) (8)
+- [Appearance](#appearance) (18)
 - [File Explorer](#file-explorer) (22)
 - [Gaming](#gaming) (2)
 - [Multi-tasking](#multi-tasking) (7)
 - [Optional Windows Features](#optional-windows-features) (2)
-- [Other](#other) (12)
+- [Other](#other) (38)
 - [Other settings](#other-settings) (8)
 
 ## Privacy & Suggested Content
@@ -543,6 +543,21 @@ Reverting: unchecking this setting applies `Enable_Diagnostic_Tracing.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
+### MSRT telemetry
+
+`-DisableMsrtTelemetry`
+
+Registry changes (`Disable_MSRT_Telemetry.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT` | `DontReportInfectionInformation` | 1 |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\RemovalTools\MpGears` | `HeartbeatTrackingIndex` | 0 |
+
+Reverting: unchecking this setting applies `Enable_MSRT_Telemetry.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
 ## System
 
 ### Disable 'Drag Tray' for sharing & moving files
@@ -773,6 +788,34 @@ Registry changes (`Disable_SMB_Throttling.reg`):
 | `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters` | `DisableBandwidthThrottling` | 1 |
 
 Reverting: unchecking this setting applies `Enable_SMB_Throttling.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### QoS reservation
+
+`-ConfigureQosReservation`
+
+Registry changes (`Configure_QoS_Reservation.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Psched` | `NonBestEffortLimit` | 0 |
+
+Reverting: unchecking this setting applies `Default_QoS_Reservation.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### network throttling
+
+`-DisableNetworkThrottling`
+
+Registry changes (`Disable_Network_Throttling.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile` | `NetworkThrottlingIndex` | 4294967295 |
+
+Reverting: unchecking this setting applies `Enable_Network_Throttling.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
@@ -1555,6 +1598,149 @@ Reverting: unchecking this setting applies `Use_Ribbon_Mode.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 
+### best wallpaper quality
+
+`-SetBestWallpaperQuality`
+
+Registry changes (`Set_Best_Wallpaper_Quality.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `JPEGImportQuality` | 100 |
+
+Reverting: unchecking this setting applies `Set_Balanced_Wallpaper_Quality.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### warning sounds
+
+`-DisableWarningSounds`
+
+Registry changes (`Disable_Warning_Sounds.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Accessibility` | `Warning Sounds` | 0 |
+| `HKEY_CURRENT_USER\Control Panel\Accessibility` | `Sound on Activation` | 0 |
+| `HKEY_CURRENT_USER\Control Panel\Accessibility\SoundSentry` | `WindowsEffect` | "0" |
+
+Reverting: unchecking this setting applies `Enable_Warning_Sounds.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### item checkboxes in Explorer
+
+`-DisableItemCheckboxes`
+
+Registry changes (`Disable_Item_Checkboxes.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `AutoCheckSelect` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Item_Checkboxes.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### menu open delay
+
+`-DisableMenuDelay`
+
+Registry changes (`Disable_Menu_Delay.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `MenuShowDelay` | "0" |
+
+Reverting: unchecking this setting applies `Enable_Menu_Delay.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### disconnected and invalid sounds
+
+`-HideDisconnectedSounds`
+
+Registry changes (`Hide_Disconnected_Sounds.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl` | `ShowDisconnectedDevices` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl` | `ShowHiddenDevices` | 0 |
+
+Reverting: unchecking this setting applies `Show_Disconnected_Sounds.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### the shortcut suffix on new shortcuts
+
+`-RemoveShortcutSuffix`
+
+Registry changes (`Remove_Shortcut_Text.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\NamingTemplates` | `ShortcutNameTemplate` | "%s.lnk" |
+
+Reverting: unchecking this setting applies `Restore_Shortcut_Text.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### classic blue tooltips
+
+`-EnableBlueTooltips`
+
+Registry changes (`Enable_Blue_Tooltips.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Colors` | `InfoWindow` | "246 253 255" |
+
+Reverting: unchecking this setting applies `Disable_Blue_Tooltips.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### overlay scrollbars
+
+`-DisableOverlayScrollbars`
+
+Registry changes (`Disable_Overlay_Scrollbars.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Accessibility` | `DynamicScrollbars` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Overlay_Scrollbars.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### login screen blur
+
+`-DisableLoginBlur`
+
+Registry changes (`Disable_Login_Blur.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System` | `DisableAcrylicBackgroundOnLogon` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Login_Blur.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### battery percentage on the taskbar
+
+`-ShowBatteryPercentage`
+
+Registry changes (`Show_Battery_Percentage.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `IsBatteryPercentageEnabled` | 1 |
+
+Reverting: unchecking this setting applies `Hide_Battery_Percentage.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
 ## File Explorer
 
 ### Change the default location that File Explorer opens to 'Home'
@@ -2267,6 +2453,389 @@ Registry changes (`Disable_WPBT.reg`):
 | `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager` | `DisableWpbtExecution` | 1 |
 
 Reverting: unchecking this setting applies `Enable_WPBT.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Store auto-updates
+
+`-DisableStoreAutoUpdates`
+
+Registry changes (`Disable_Store_Auto_Updates.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate` | `AutoDownload` | 2 |
+
+Reverting: unchecking this setting applies `Enable_Store_Auto_Updates.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### USB issue notifications
+
+`-DisableUsbNotifications`
+
+Registry changes (`Disable_USB_Notifications.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Shell\USB` | `NotifyOnUsbErrors` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Shell\USB` | `NotifyOnWeakCharger` | 0 |
+
+Reverting: unchecking this setting applies `Enable_USB_Notifications.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Settings app banner
+
+`-DisableSettingsBanner`
+
+Registry changes (`Disable_Settings_Banner.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsRuntime\ActivatableClassId\ValueBanner.IdealStateFeatureControlProvider` | `ActivationType` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Settings_Banner.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### more details on file transfers
+
+`-ShowMoreDetailsOnTransfer`
+
+Registry changes (`Show_More_Details_Transfer.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager` | `EnthusiastMode` | 1 |
+
+Reverting: unchecking this setting applies `Show_Less_Details_Transfer.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### searching for broken shortcuts
+
+`-DisableInvalidShortcutSearch`
+
+Registry changes (`Disable_Invalid_Shortcut_Search.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `NoResolveSearch` | 1 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `NoResolveTrack` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Invalid_Shortcut_Search.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Office files in Quick Access
+
+`-HideOfficeFilesInQuickAccess`
+
+Registry changes (`Hide_Office_Files.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer` | `ShowCloudFilesInQuickAccess` | 0 |
+
+Reverting: unchecking this setting applies `Show_Office_Files.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### the full context menu
+
+`-AlwaysFullContextMenu`
+
+Registry changes (`Always_Full_Context_Menu.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer` | `MultipleInvokePromptMinimum` | 100 |
+
+Reverting: unchecking this setting applies `Default_Context_Menu.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### frequently used items in Explorer
+
+`-HideFrequentItems`
+
+Registry changes (`Hide_Frequent_Items.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer` | `ShowFrequent` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer` | `ShowRecent` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `Start_TrackDocs` | 0 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `ClearRecentDocsOnExit` | 1 |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `NoRecentDocsHistory` | 1 |
+| `HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer` | `NoRemoteDestinations` | 1 |
+
+Reverting: unchecking this setting applies `Show_Frequent_Items.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### mouse hover delay
+
+`-MinimizeMouseHoverTime`
+
+Registry changes (`Minimize_Mouse_Hover_Time.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `MouseHoverTime` | "20" |
+
+Reverting: unchecking this setting applies `Default_Mouse_Hover_Time.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### web results in Open With
+
+`-DisableInternetOpenWith`
+
+Registry changes (`Disable_Internet_Open_With.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `NoInternetOpenWith` | 1 |
+
+Reverting: unchecking this setting applies `Enable_Internet_Open_With.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Cast to Device from the context menu
+
+`-RemoveCastToDevice`
+
+Registry changes (`Remove_Cast_To_Device.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked` | `{7AD84985-87B4-4a16-BE58-8B72A5B390F7}` | "" |
+
+Reverting: unchecking this setting applies `Add_Cast_To_Device.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### touch visual feedback
+
+`-DisableTouchVisualFeedback`
+
+Registry changes (`Disable_Touch_Visual_Feedback.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Cursors` | `GestureVisualization` | 0 |
+| `HKEY_CURRENT_USER\Control Panel\Cursors` | `ContactVisualization` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Touch_Visual_Feedback.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### more pins in Start
+
+`-ShowMorePins`
+
+Registry changes (`Show_More_Pins.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `Start_Layout` | 1 |
+
+Reverting: unchecking this setting applies `Show_Fewer_Pins.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### all tasks in Control Panel
+
+`-ShowAllControlPanelTasks`
+
+Registry changes (`Show_All_Control_Panel_Tasks.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}` | `(Default)` | "All Tasks" |
+
+Reverting: unchecking this setting applies `Default_Control_Panel_Tasks.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### shutdown timeout
+
+`-DecreaseShutdownTime`
+
+Registry changes (`Decrease_Shutdown_Time.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `HungAppTimeout` | "2000" |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `WaitToKillAppTimeOut` | "2000" |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control` | `WaitToKillServiceTimeout` | "2000" |
+
+Reverting: unchecking this setting applies `Default_Shutdown_Time.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### verbose startup and shutdown messages
+
+`-EnableVerboseMessages`
+
+Registry changes (`Enable_Verbose_Messages.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System` | `verbosestatus` | 1 |
+
+Reverting: unchecking this setting applies `Disable_Verbose_Messages.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### force apps to close on shutdown
+
+`-ForceEndShutdownApps`
+
+Registry changes (`Force_End_Shutdown_Apps.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Control Panel\Desktop` | `AutoEndTasks` | "1" |
+
+Reverting: unchecking this setting applies `Default_End_Shutdown_Apps.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### crash dump settings
+
+`-ConfigureCrashControl`
+
+Registry changes (`Configure_Crash_Control.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl` | `AutoReboot` | 0 |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl` | `CrashDumpEnabled` | 0 |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl` | `LogEvent` | 0 |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl` | `DisplayParameters` | 1 |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl\StorageTelemetry` | `DeviceDumpEnabled` | 0 |
+
+Reverting: unchecking this setting applies `Default_Crash_Control.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Command Prompt in the Win+X menu
+
+`-WinXOpensCommandPrompt`
+
+Registry changes (`WinX_Opens_Command_Prompt.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced` | `DontUsePowerShellOnWinX` | 1 |
+
+Reverting: unchecking this setting applies `WinX_Opens_PowerShell.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Meet Now in the taskbar
+
+`-HideMeetNow`
+
+Registry changes (`Hide_Meet_Now.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` | `HideSCAMeetNow` | 1 |
+
+Reverting: unchecking this setting applies `Show_Meet_Now.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### sound scheme quality reduction
+
+`-DisableSoundReduction`
+
+Registry changes (`Disable_Sound_Reduction.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Multimedia\Audio` | `UserDuckingPreference` | 3 |
+
+Reverting: unchecking this setting applies `Enable_Sound_Reduction.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### detailed BSOD information
+
+`-EnableDetailedBsod`
+
+Registry changes (`Enable_Detailed_Bsod.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl` | `DisableEmoticon` | 1 |
+
+Reverting: unchecking this setting applies `Disable_Detailed_Bsod.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Game Mode
+
+`-EnableGameMode`
+
+Registry changes (`Enable_Game_Mode.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\GameBar` | `AllowAutoGameMode` | 1 |
+| `HKEY_CURRENT_USER\Software\Microsoft\GameBar` | `AutoGameModeEnabled` | 1 |
+
+Reverting: unchecking this setting applies `Disable_Game_Mode.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### new Outlook toggle
+
+`-DisableNewOutlook`
+
+Registry changes (`Disable_New_Outlook.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Preferences` | `UseNewOutlook` | 1 |
+| `HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Options\General` | `HideNewOutlookToggle` | 0 |
+| `HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Outlook\Options\General` | `DoNewOutlookAutoMigration` | 0 |
+| `HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\16.0\Outlook\Preferences` | `NewOutlookMigrationUserSetting` | 0 |
+
+Reverting: unchecking this setting applies `Enable_New_Outlook.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### NumLock on boot
+
+`-EnableNumLockOnBoot`
+
+Registry changes (`Enable_NumLock_On_Boot.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_USERS\.Default\Control Panel\Keyboard` | `InitialKeyboardIndicators` | "2" |
+| `HKEY_CURRENT_USER\Control Panel\Keyboard` | `InitialKeyboardIndicators` | "2" |
+
+Reverting: unchecking this setting applies `Disable_NumLock_On_Boot.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### S3 sleep support
+
+`-EnableS3Sleep`
+
+Registry changes (`Enable_S3_Sleep.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power` | `PlatformAoAcOverride` | 0 |
+
+Reverting: unchecking this setting applies `Disable_S3_Sleep.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 

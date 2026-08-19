@@ -37,103 +37,94 @@ existing_features = cat['Features']
 existing_ids = {f['FeatureId'] for f in existing_features}
 existing_regfiles = set(os.listdir(os.path.join(REPO, 'Regfiles')))
 
-# (winforge id, FeatureId, Win11Debloat category Name, Label, ApplyText, UndoText,
-#  apply reg base, undo reg base)
+# (winforge id, FeatureId, Win11Debloat category Name, Label, apply reg base, undo reg base)
+# Apply/undo text is derived from the FeatureId prefix in derive_texts().
 CURATED = [
-    ('atlas-disable-nvidia-telemetry', 'DisableNvidiaTelemetry', 'Privacy & Suggested Content',
-     'Disable NVIDIA telemetry', 'Disabling NVIDIA telemetry', 'Enabling NVIDIA telemetry',
-     'Disable_Nvidia_Telemetry', 'Enable_Nvidia_Telemetry'),
-    ('atlas-config-app-permissions', 'DenyAppPermissions', 'Privacy & Suggested Content',
-     'Deny app access to diagnostics, location and account info', 'Denying app permissions',
-     'Allowing app permissions', 'Deny_App_Permissions', 'Allow_App_Permissions'),
-    ('atlas-disable-device-monitoring', 'DisableDeviceMonitoring', 'Privacy & Suggested Content',
-     'Disable device monitoring', 'Disabling device monitoring', 'Enabling device monitoring',
-     'Disable_Device_Monitoring', 'Enable_Device_Monitoring'),
-    ('atlas-disable-pca', 'DisableProgramCompatibilityAssistant', 'Privacy & Suggested Content',
-     'Disable Program Compatibility Assistant telemetry', 'Disabling PCA telemetry',
-     'Enabling PCA telemetry', 'Disable_PCA', 'Enable_PCA'),
-    ('atlas-disable-perf-track', 'DisableCustomerExperienceImprovement', 'Privacy & Suggested Content',
-     'Disable Customer Experience Improvement tracking', 'Disabling CEIP tracking',
-     'Enabling CEIP tracking', 'Disable_CEIP_Tracking', 'Enable_CEIP_Tracking'),
-    ('atlas-disable-privacy-experience', 'DisablePrivacyExperience', 'Privacy & Suggested Content',
-     'Disable the Windows privacy experience', 'Disabling privacy experience',
-     'Enabling privacy experience', 'Disable_Privacy_Experience', 'Enable_Privacy_Experience'),
-    ('atlas-disable-rsop-logging', 'DisableRsopLogging', 'Privacy & Suggested Content',
-     'Disable Resultant Set of Policy logging', 'Disabling RSOP logging',
-     'Enabling RSOP logging', 'Disable_RSOP_Logging', 'Enable_RSOP_Logging'),
-    ('atlas-disable-user-tracking', 'DisableUserTracking', 'Privacy & Suggested Content',
-     'Disable user activity tracking', 'Disabling user tracking', 'Enabling user tracking',
-     'Disable_User_Tracking', 'Enable_User_Tracking'),
-    ('atlas-disallow-ms-accounts', 'DisallowMicrosoftAccounts', 'Privacy & Suggested Content',
-     'Disallow Microsoft account sign-in', 'Disallowing Microsoft accounts',
-     'Allowing Microsoft accounts', 'Disallow_Microsoft_Accounts', 'Allow_Microsoft_Accounts'),
-    ('atlas-disable-activation-telemetry', 'DisableActivationTelemetry', 'Privacy & Suggested Content',
-     'Disable Windows activation telemetry', 'Disabling activation telemetry',
-     'Enabling activation telemetry', 'Disable_Activation_Telemetry', 'Enable_Activation_Telemetry'),
-    ('atlas-disable-diagnostic-tracing', 'DisableDiagnosticTracing', 'Privacy & Suggested Content',
-     'Disable diagnostic tracing (DiagTrack)', 'Disabling diagnostic tracing',
-     'Enabling diagnostic tracing', 'Disable_Diagnostic_Tracing', 'Enable_Diagnostic_Tracing'),
+    # Network & Security
+    ('net-qos', 'ConfigureQosReservation', 'Network & Security', 'QoS reservation',
+     'Configure_QoS_Reservation', 'Default_QoS_Reservation'),
+    ('net-throttling', 'DisableNetworkThrottling', 'Network & Security', 'network throttling',
+     'Disable_Network_Throttling', 'Enable_Network_Throttling'),
 
-    ('net-doh', 'EnableDnsOverHttps', 'Network & Security',
-     'Enable DNS over HTTPS (DoH)', 'Enabling DNS over HTTPS', 'Disabling DNS over HTTPS',
-     'Enable_DNS_Over_HTTPS', 'Disable_DNS_Over_HTTPS'),
-    ('atlas-disable-smb-bandwidth-throttling', 'DisableSmbBandwidthThrottling', 'Network & Security',
-     'Disable SMB bandwidth throttling', 'Disabling SMB throttling',
-     'Enabling SMB throttling', 'Disable_SMB_Throttling', 'Enable_SMB_Throttling'),
+    # Privacy & Suggested Content
+    ('atlas-disable-msrt-telemetry', 'DisableMsrtTelemetry', 'Privacy & Suggested Content',
+     'MSRT telemetry', 'Disable_MSRT_Telemetry', 'Enable_MSRT_Telemetry'),
 
-    ('exp-hide-recent', 'HideRecentFiles', 'File Explorer',
-     'Hide recent files in Quick Access', 'Hiding recent files', 'Showing recent files',
-     'Hide_Recent_Files', 'Show_Recent_Files'),
-    ('exp-thumbnail-cache', 'SetThumbnailCacheSize', 'File Explorer',
-     'Optimise the thumbnail cache size', 'Configuring thumbnail cache',
-     'Restoring default thumbnail cache', 'Set_Thumbnail_Cache_Size', 'Default_Thumbnail_Cache_Size'),
+    # Appearance
+    ('atlas-best-wallpaper-quality', 'SetBestWallpaperQuality', 'Appearance', 'best wallpaper quality',
+     'Set_Best_Wallpaper_Quality', 'Set_Balanced_Wallpaper_Quality'),
+    ('atlas-disable-warning-sounds', 'DisableWarningSounds', 'Appearance', 'warning sounds',
+     'Disable_Warning_Sounds', 'Enable_Warning_Sounds'),
+    ('atlas-disable-check-boxes', 'DisableItemCheckboxes', 'Appearance', 'item checkboxes in Explorer',
+     'Disable_Item_Checkboxes', 'Enable_Item_Checkboxes'),
+    ('atlas-disable-menu-delay', 'DisableMenuDelay', 'Appearance', 'menu open delay',
+     'Disable_Menu_Delay', 'Enable_Menu_Delay'),
+    ('atlas-hide-disabled-disconnected-sounds', 'HideDisconnectedSounds', 'Appearance',
+     'disconnected and invalid sounds', 'Hide_Disconnected_Sounds', 'Show_Disconnected_Sounds'),
+    ('atlas-remove-shortcut-text', 'RemoveShortcutSuffix', 'Appearance',
+     'the shortcut suffix on new shortcuts', 'Remove_Shortcut_Text', 'Restore_Shortcut_Text'),
+    ('atlas-blue-tooltips', 'EnableBlueTooltips', 'Appearance', 'classic blue tooltips',
+     'Enable_Blue_Tooltips', 'Disable_Blue_Tooltips'),
+    ('winutil-wpftogglescrollbars', 'DisableOverlayScrollbars', 'Appearance', 'overlay scrollbars',
+     'Disable_Overlay_Scrollbars', 'Enable_Overlay_Scrollbars'),
+    ('winutil-wpftoggleloginblur', 'DisableLoginBlur', 'Appearance', 'login screen blur',
+     'Disable_Login_Blur', 'Enable_Login_Blur'),
+    ('winutil-wpftogglebatterypercentage', 'ShowBatteryPercentage', 'Appearance',
+     'battery percentage on the taskbar', 'Show_Battery_Percentage', 'Hide_Battery_Percentage'),
 
-    ('atlas-disable-dynamic-lighting', 'DisableDynamicLighting', 'Appearance',
-     'Disable Dynamic Lighting (HID lighting)', 'Disabling Dynamic Lighting',
-     'Enabling Dynamic Lighting', 'Disable_Dynamic_Lighting', 'Enable_Dynamic_Lighting'),
-    ('atlas-visual-effects', 'DisableVisualEffects', 'Appearance',
-     'Disable visual effects for best performance', 'Disabling visual effects',
-     'Enabling visual effects', 'Disable_Visual_Effects', 'Enable_Visual_Effects'),
-    ('atlas-disable-aero-shake', 'DisableAeroShake', 'Appearance',
-     'Disable Aero Shake', 'Disabling Aero Shake', 'Enabling Aero Shake',
-     'Disable_Aero_Shake', 'Enable_Aero_Shake'),
-    ('atlas-disable-desktop-peek', 'DisableDesktopPeek', 'Appearance',
-     'Disable desktop peek (Aero Peek)', 'Disabling desktop peek', 'Enabling desktop peek',
-     'Disable_Desktop_Peek', 'Enable_Desktop_Peek'),
-    ('atlas-use-compact-mode', 'UseCompactModeExplorer', 'Appearance',
-     'Use compact mode in File Explorer', 'Enabling compact mode', 'Disabling compact mode',
-     'Use_Compact_Mode', 'Use_Ribbon_Mode'),
-
-    ('atlas-disable-resume', 'DisableCrossDeviceResume', 'Other',
-     'Disable Cross-Device Resume', 'Disabling Cross-Device Resume', 'Enabling Cross-Device Resume',
-     'Disable_Cross_Device_Resume', 'Enable_Cross_Device_Resume'),
-    ('atlas-disable-settings-tips', 'DisableSettingsTips', 'Other',
-     'Disable tips in the Settings app', 'Disabling Settings tips', 'Enabling Settings tips',
-     'Disable_Settings_Tips', 'Enable_Settings_Tips'),
-    ('atlas-enable-long-paths', 'EnableLongPaths', 'Other',
-     'Enable long file paths (NTFS)', 'Enabling long paths', 'Disabling long paths',
-     'Enable_Long_Paths', 'Disable_Long_Paths'),
-    ('atlas-classic-search', 'UseClassicSearch', 'Other',
-     'Use classic search in File Explorer', 'Enabling classic search', 'Disabling classic search',
-     'Use_Classic_Search', 'Use_Modern_Search'),
-    ('atlas-disable-nearby-sharing', 'DisableNearbySharing', 'Other',
-     'Disable Nearby Sharing', 'Disabling Nearby Sharing', 'Enabling Nearby Sharing',
-     'Disable_Nearby_Sharing', 'Enable_Nearby_Sharing'),
-    ('atlas-disable-news-and-interests', 'DisableNewsAndInterests', 'Other',
-     'Disable News and Interests', 'Disabling News and Interests', 'Enabling News and Interests',
-     'Disable_News_And_Interests', 'Enable_News_And_Interests'),
-    ('atlas-disable-tablet-mode', 'DisableTabletMode', 'Other',
-     'Disable Tablet Mode', 'Disabling Tablet Mode', 'Enabling Tablet Mode',
-     'Disable_Tablet_Mode', 'Enable_Tablet_Mode'),
-    ('atlas-disable-low-disk-warning', 'DisableLowDiskWarning', 'Other',
-     'Disable low disk space warnings', 'Disabling low disk warnings', 'Enabling low disk warnings',
-     'Disable_Low_Disk_Warning', 'Enable_Low_Disk_Warning'),
-    ('atlas-disable-startup-delay', 'DisableStartupDelay', 'Other',
-     'Disable startup delay for apps', 'Disabling startup delay', 'Enabling startup delay',
-     'Disable_Startup_Delay', 'Enable_Startup_Delay'),
-    ('atlas-disable-wpbt', 'DisableWpbt', 'Other',
-     'Disable WPBT (firmware-injected binaries)', 'Disabling WPBT', 'Enabling WPBT',
-     'Disable_WPBT', 'Enable_WPBT'),
+    # Other (Quality of Life)
+    ('atlas-disable-store-auto-updates', 'DisableStoreAutoUpdates', 'Other', 'Store auto-updates',
+     'Disable_Store_Auto_Updates', 'Enable_Store_Auto_Updates'),
+    ('atlas-disable-usb-issues-notifications', 'DisableUsbNotifications', 'Other', 'USB issue notifications',
+     'Disable_USB_Notifications', 'Enable_USB_Notifications'),
+    ('atlas-disable-win11-settings-banner', 'DisableSettingsBanner', 'Other', 'Settings app banner',
+     'Disable_Settings_Banner', 'Enable_Settings_Banner'),
+    ('atlas-always-more-details-transfer', 'ShowMoreDetailsOnTransfer', 'Other',
+     'more details on file transfers', 'Show_More_Details_Transfer', 'Show_Less_Details_Transfer'),
+    ('atlas-disable-invalid-shortcuts-search', 'DisableInvalidShortcutSearch', 'Other',
+     'searching for broken shortcuts', 'Disable_Invalid_Shortcut_Search', 'Enable_Invalid_Shortcut_Search'),
+    ('atlas-dont-show-office-files', 'HideOfficeFilesInQuickAccess', 'Other', 'Office files in Quick Access',
+     'Hide_Office_Files', 'Show_Office_Files'),
+    ('atlas-full-context-on-more-than-15-items', 'AlwaysFullContextMenu', 'Other', 'the full context menu',
+     'Always_Full_Context_Menu', 'Default_Context_Menu'),
+    ('atlas-hide-frequently-used-items', 'HideFrequentItems', 'Other', 'frequently used items in Explorer',
+     'Hide_Frequent_Items', 'Show_Frequent_Items'),
+    ('atlas-minimize-mouse-hover-time', 'MinimizeMouseHoverTime', 'Other', 'mouse hover delay',
+     'Minimize_Mouse_Hover_Time', 'Default_Mouse_Hover_Time'),
+    ('atlas-no-internet-open-with', 'DisableInternetOpenWith', 'Other', 'web results in Open With',
+     'Disable_Internet_Open_With', 'Enable_Internet_Open_With'),
+    ('atlas-cast-to-device', 'RemoveCastToDevice', 'Other', 'Cast to Device from the context menu',
+     'Remove_Cast_To_Device', 'Add_Cast_To_Device'),
+    ('atlas-disable-touch-visual-feedback', 'DisableTouchVisualFeedback', 'Other', 'touch visual feedback',
+     'Disable_Touch_Visual_Feedback', 'Enable_Touch_Visual_Feedback'),
+    ('atlas-show-more-pins', 'ShowMorePins', 'Other', 'more pins in Start',
+     'Show_More_Pins', 'Show_Fewer_Pins'),
+    ('atlas-show-all-tasks-control-panel', 'ShowAllControlPanelTasks', 'Other', 'all tasks in Control Panel',
+     'Show_All_Control_Panel_Tasks', 'Default_Control_Panel_Tasks'),
+    ('atlas-decrease-shutdown-time', 'DecreaseShutdownTime', 'Other', 'shutdown timeout',
+     'Decrease_Shutdown_Time', 'Default_Shutdown_Time'),
+    ('atlas-enable-verbose-messages', 'EnableVerboseMessages', 'Other',
+     'verbose startup and shutdown messages', 'Enable_Verbose_Messages', 'Disable_Verbose_Messages'),
+    ('atlas-force-end-shutdown-apps', 'ForceEndShutdownApps', 'Other', 'force apps to close on shutdown',
+     'Force_End_Shutdown_Apps', 'Default_End_Shutdown_Apps'),
+    ('atlas-crash-control-qol', 'ConfigureCrashControl', 'Other', 'crash dump settings',
+     'Configure_Crash_Control', 'Default_Crash_Control'),
+    ('atlas-cmd-win-x', 'WinXOpensCommandPrompt', 'Other', 'Command Prompt in the Win+X menu',
+     'WinX_Opens_Command_Prompt', 'WinX_Opens_PowerShell'),
+    ('atlas-hide-meet-now', 'HideMeetNow', 'Other', 'Meet Now in the taskbar',
+     'Hide_Meet_Now', 'Show_Meet_Now'),
+    ('atlas-do-not-reduce-sounds', 'DisableSoundReduction', 'Other', 'sound scheme quality reduction',
+     'Disable_Sound_Reduction', 'Enable_Sound_Reduction'),
+    ('winutil-wpftoggledetailedbsod', 'EnableDetailedBsod', 'Other', 'detailed BSOD information',
+     'Enable_Detailed_Bsod', 'Disable_Detailed_Bsod'),
+    ('winutil-wpftogglegamemode', 'EnableGameMode', 'Other', 'Game Mode',
+     'Enable_Game_Mode', 'Disable_Game_Mode'),
+    ('winutil-wpftogglenewoutlook', 'DisableNewOutlook', 'Other', 'new Outlook toggle',
+     'Disable_New_Outlook', 'Enable_New_Outlook'),
+    ('winutil-wpftogglenumlock', 'EnableNumLockOnBoot', 'Other', 'NumLock on boot',
+     'Enable_NumLock_On_Boot', 'Disable_NumLock_On_Boot'),
+    ('winutil-wpftoggles3sleep', 'EnableS3Sleep', 'Other', 'S3 sleep support',
+     'Enable_S3_Sleep', 'Disable_S3_Sleep'),
 ]
 
 
@@ -209,6 +200,23 @@ def insert_into_param_block(path, new_lines):
     new_text = prefix + insert + text[i:]
     with open(path, 'w', encoding='utf-8') as fh:
         fh.write(new_text)
+
+
+def derive_texts(fid, label):
+    low = label[0].lower() + label[1:] if label else label
+    if fid.startswith('Disable'):
+        return ('Disabling ' + low, 'Enabling ' + low)
+    if fid.startswith('Enable'):
+        return ('Enabling ' + low, 'Disabling ' + low)
+    if fid.startswith('Hide'):
+        return ('Hiding ' + low, 'Showing ' + low)
+    if fid.startswith('Show'):
+        return ('Showing ' + low, 'Hiding ' + low)
+    if fid.startswith('Remove'):
+        return ('Removing ' + low, 'Adding ' + low)
+    if fid.startswith('Set') or fid.startswith('Use') or fid.startswith('Configure'):
+        return ('Configuring ' + low, 'Restoring default ' + low)
+    return ('Applying ' + low, 'Reverting ' + low)
 
 
 def feature_json_entry(fid, label, category, apply_text, undo_text, reg_base, undo_base):
@@ -363,7 +371,8 @@ def generate_docs():
 def main():
     new_feature_entries = []
     new_switches = []
-    for (wf_id, fid, cat_name, label, apply_text, undo_text, reg_base, undo_base) in CURATED:
+    for (wf_id, fid, cat_name, label, reg_base, undo_base) in CURATED:
+        apply_text, undo_text = derive_texts(fid, label)
         assert fid not in existing_ids, 'FeatureId collision: ' + fid
         assert reg_base + '.reg' not in existing_regfiles, 'regfile collision: ' + reg_base
         t = wf_tweaks[wf_id]
