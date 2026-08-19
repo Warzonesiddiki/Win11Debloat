@@ -17,8 +17,13 @@ Gates implemented:
   4. Collision check          (no two features write the same registry value,
                                except the known mutually-exclusive option groups)
   5. CLI surface parity       (feature <-> [switch] in both entry points)
-  6. Docs parity              (docs/FEATURES.md matches the catalogue)
-  7. Preset validation        (presets reference only real, enabled features)
+   6. Docs parity              (docs/FEATURES.md matches the catalogue)
+   7. Preset validation        (presets reference only real, enabled features)
+   8. Regfile format           (every .reg is valid UTF-16LE/BOM/CRLF with a header
+                                and at least one section)
+   9. Switch uniqueness        (no duplicate parameter in either entry point)
+  10. No silent no-op          (a feature's apply file sets/deletes a value)
+
 
 Exit code is non-zero if any gate fails.
 """
@@ -188,6 +193,10 @@ def gate_catalogue_integrity(catalog):
             failures.append("Feature {} undo file missing: {}".format(f["FeatureId"], ruk))
         if rk and not os.path.exists(os.path.join(REGFILES, "Sysprep", rk)):
             failures.append("Feature {} missing Sysprep variant: {}".format(f["FeatureId"], rk))
+        if rk and os.path.exists(os.path.join(REGFILES, rk)):
+            s, c, d = parse_reg_file(os.path.join(REGFILES, rk))
+            if not s and not c and not d:
+                failures.append("Feature {} apply file is a silent no-op (no operations)".format(f["FeatureId"]))
     return failures
 
 
@@ -432,6 +441,59 @@ def gate_app_catalogue_integrity():
     return failures
 
 
+def gate_regfile_format():
+    failures = []
+    for root, _, files in os.walk(REGFILES):
+        for fn in files:
+            if not fn.lower().endswith(".reg"):
+                continue
+            path = os.path.join(root, fn)
+            rel = os.path.relpath(path, REPO_ROOT)
+            b = open(path, "rb").read()
+            if b[:2] != b"\xff\xfe":
+                failures.append("{}: not UTF-16LE with BOM".format(rel))
+                continue
+            txt = b[2:].decode("utf-16-le")
+            non_empty = [l.strip() for l in txt.split("\n")
+                         if l.strip() and not l.strip().startswith(";")]
+            if not non_empty or not non_empty[0].startswith("Windows Registry Editor Version"):
+                failures.append("{}: missing registry header".format(rel))
+                continue
+            if "\r" not in txt:
+                failures.append("{}: not CRLF line endings".format(rel))
+            if not any(l.startswith("[") for l in non_empty):
+                failures.append("{}: no registry sections".format(rel))
+    return failures
+
+
+def gate_switch_uniqueness():
+    failures = []
+    for label, path in (("Win11Debloat.ps1", MAIN_SCRIPT), ("Get.ps1", LAUNCHER)):
+        text = read_text(path)
+        m = re.search(r"param\s*\(", text)
+        if not m:
+            continue
+        start = m.end() - 1
+        depth = 0
+        i = start
+        end = len(text)
+        while i < len(text):
+            if text[i] == "(":
+                depth += 1
+            elif text[i] == ")":
+                depth -= 1
+                if depth == 0:
+                    end = i
+                    break
+            i += 1
+        block = text[start:end]
+        names = re.findall(r"\]\s*\$(\w+)", block)
+        dupes = sorted({n for n in names if names.count(n) > 1})
+        if dupes:
+            failures.append("{}: duplicate parameter(s): {}".format(label, ", ".join(dupes)))
+    return failures
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(
@@ -453,6 +515,8 @@ def main():
         ("Docs parity", gate_docs_parity(catalog)),
         ("Preset validation", gate_preset_validation(catalog)),
         ("App catalogue integrity", gate_app_catalogue_integrity()),
+        ("Regfile format", gate_regfile_format()),
+        ("Switch uniqueness", gate_switch_uniqueness()),
     ]
     gates = [(t, f) for (t, f) in all_gates if not args.gate or t == args.gate]
 
