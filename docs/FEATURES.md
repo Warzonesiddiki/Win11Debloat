@@ -7,14 +7,14 @@ This reference lists every setting Win11Debloat can apply, the command-line swit
 selects it, and the exact registry values it writes, so you can see precisely what a
 setting does before you run it.
 
-117 settings across 13 categories.
+119 settings across 13 categories.
 
 ## Contents
 
 - [Privacy & Suggested Content](#privacy--suggested-content) (20)
 - [System](#system) (8)
 - [Network & Security](#network--security) (5)
-- [Start Menu & Search](#start-menu--search) (10)
+- [Start Menu & Search](#start-menu--search) (12)
 - [AI](#ai) (7)
 - [Windows Update](#windows-update) (4)
 - [Taskbar](#taskbar) (19)
@@ -740,6 +740,38 @@ Registry changes (`Disable_Bing_Cortana_In_Search.reg`):
 | `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search` | `CortanaConsent` | 0 |
 
 Reverting: unchecking this setting applies `Enable_Bing_Cortana_In_Search.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable Windows search history
+
+`-DisableSearchHistory`
+
+Stops Windows from saving a history of what you search for on this device. Searching keeps working, it is simply not recorded.
+
+Registry changes (`Disable_Search_History.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings` | `IsDeviceSearchHistoryEnabled` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Search_History.reg`.
+
+New user profiles: covered when running in Sysprep mode.
+
+### Disable search highlights
+
+`-DisableSearchHighlights`
+
+Removes the rotating branded content, holidays and trivia that Windows shows in the search box and search menu.
+
+Registry changes (`Disable_Search_Highlights.reg`):
+
+| Key | Value | Set to |
+| --- | --- | --- |
+| `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings` | `IsDynamicSearchBoxEnabled` | 0 |
+
+Reverting: unchecking this setting applies `Enable_Search_Highlights.reg`.
 
 New user profiles: covered when running in Sysprep mode.
 

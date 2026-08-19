@@ -23,14 +23,10 @@ BeforeAll {
     $script:RegfilesPath = Join-Path $script:RepoRoot 'Regfiles'
 
     # Parameters that are declared on the entry points but resolve to no feature in
-    # Config/Features.json. Passing one of these currently does nothing at all. Both have
-    # a complete .reg set (apply + Sysprep + Undo) but no catalogue entry, so this is
-    # either a dropped catalogue entry or a retired feature whose parameter was left
-    # behind. Listed explicitly so that this known debt does not mask a NEW orphan.
-    $script:KnownOrphanedParameters = @(
-        'DisableSearchHighlights'
-        'DisableSearchHistory'
-    )
+    # Config/Features.json. Passing one of these would do nothing at all. The list is
+    # empty and should stay that way: it exists so that a deliberate, documented
+    # exception is possible without weakening the check for everything else.
+    $script:KnownOrphanedParameters = @()
 
     # Parameters that exist only on the Get.ps1 launcher.
     $script:LauncherOnlyParameters = @('Dev', 'Verbose', 'WhatIf')

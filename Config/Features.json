@@ -883,6 +883,32 @@
       "MaxVersion": null
     },
     {
+      "FeatureId": "DisableSearchHistory",
+      "Label": "Disable Windows search history",
+      "ToolTip": "Stops Windows from saving a history of what you search for on this device. Searching keeps working, it is simply not recorded.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Disable_Search_History.reg",
+      "ApplyText": "Disabling Windows search history",
+      "UndoLabel": "Enable Windows search history",
+      "ApplyUndoText": "Enabling Windows search history",
+      "RegistryUndoKey": "Enable_Search_History.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
+      "FeatureId": "DisableSearchHighlights",
+      "Label": "Disable search highlights",
+      "ToolTip": "Removes the rotating branded content, holidays and trivia that Windows shows in the search box and search menu.",
+      "Category": "Start Menu & Search",
+      "RegistryKey": "Disable_Search_Highlights.reg",
+      "ApplyText": "Disabling search highlights",
+      "UndoLabel": "Enable search highlights",
+      "ApplyUndoText": "Enabling search highlights",
+      "RegistryUndoKey": "Enable_Search_Highlights.reg",
+      "MinVersion": null,
+      "MaxVersion": null
+    },
+    {
       "FeatureId": "DisableStoreSearchSuggestions",
       "Label": "Disable Microsoft Store app suggestions in search",
       "ToolTip": "This will disable the Microsoft Store app suggestions in Windows search.",
