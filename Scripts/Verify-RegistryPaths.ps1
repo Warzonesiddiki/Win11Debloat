@@ -113,11 +113,6 @@ foreach ($fid in $PortedIds) {
     if (-not (Test-Path -LiteralPath $applyFile)) { $failures += "${fid} apply file missing"; $bad++; continue }
 
     $applyEntries = Get-RegEntries $applyFile
-    $hives = @($applyEntries | ForEach-Object { ($_.Key -split '\\', 2)[0].ToUpper() } | Sort-Object -Unique)
-    if (($hives -contains 'HKEY_LOCAL_MACHINE') -and -not $isAdmin) {
-        Write-Host ("SKIP (needs admin) {0}" -f $fid) -ForegroundColor DarkGray
-        $skipped++; continue
-    }
 
     $appliedOk = $true
     $permSkip = $false
