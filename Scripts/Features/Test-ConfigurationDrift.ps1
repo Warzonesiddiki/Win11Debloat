@@ -181,6 +181,9 @@ function Write-AppliedChangesReport {
     $results = @(Get-ConfigurationDrift -FeatureIds $FeatureIds)
     $notInEffect = @($results | Where-Object { $_.Status -eq $script:DriftStatus_Reverted })
 
+    # Recorded for the machine-readable run summary (Write-RunSummary).
+    $script:NotInEffectFeatureIds = @($notInEffect | ForEach-Object { $_.FeatureId })
+
     if ($notInEffect.Count -eq 0) { return 0 }
 
     $pendingReboot = New-Object System.Collections.Generic.List[object]

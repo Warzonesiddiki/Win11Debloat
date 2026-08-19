@@ -346,7 +346,9 @@ function Invoke-AllChanges {
     $script:RegistryImportFailures = 0
     $script:AppRemovalFailures = 0
     $script:FeatureFailures = 0
+    $script:NotInEffectFeatureIds = @()
     $script:AppRemovalVerificationUnavailable = $false
+    $runStartedAt = Get-Date
 
     # ---- Gather work items ----
     $applyIds = @()
@@ -479,6 +481,13 @@ function Invoke-AllChanges {
 
     if ($script:AppRemovalVerificationUnavailable) {
         Write-Warning "Unable to verify if all apps were uninstalled successfully."
+    }
+
+    # Machine-readable record of the run, for deployments that need to check the
+    # outcome without parsing console output. Opt-in via -RunSummaryPath.
+    if ($script:Params.ContainsKey('RunSummaryPath')) {
+        $summary = New-RunSummary -AppliedFeatureIds $applyIds -UndoneFeatureIds $undoIds -StartedAt $runStartedAt
+        Write-RunSummary -Path ([string]$script:Params['RunSummaryPath']) -Summary $summary
     }
 
 }

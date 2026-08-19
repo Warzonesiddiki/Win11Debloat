@@ -4,6 +4,7 @@ param (
     [switch]$Silent,
     [switch]$Sysprep,
     [string]$LogPath,
+    [string]$RunSummaryPath,
     [string]$User,
     [Alias('NoRestartExplorer')]
     [switch]$SkipExplorerRestart,
@@ -214,7 +215,7 @@ $script:RestoreBackupWindowSchema = Join-Path $schemasPath 'RestoreBackupWindow.
 $script:LoadAppsDetailsScriptPath = Join-Path (Join-Path $scriptsPath 'FileIO') 'Import-AppDetailsFromJson.ps1'
 $script:TestAppInWingetListScriptPath = Join-Path (Join-Path $scriptsPath 'AppRemoval') 'Test-AppInWingetList.ps1'
 
-$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'CheckDrift', 'RepairDrift', 'Config', 'CLI', 'AppRemovalTarget'
+$script:ControlParams = 'WhatIf', 'Confirm', 'Verbose', 'Debug', 'LogPath', 'RunSummaryPath', 'Silent', 'Sysprep', 'User', 'SkipExplorerRestart', 'SkipRegistryBackup', 'RunDefaults', 'RunDefaultsLite', 'RunSavedSettings', 'CheckDrift', 'RepairDrift', 'Config', 'CLI', 'AppRemovalTarget'
 
 # Script-level variables for GUI elements
 $script:GuiWindow = $null
@@ -408,6 +409,7 @@ if (-not $script:WingetInstalled -and -not $Silent) {
 . "$PSScriptRoot/Scripts/FileIO/Import-JsonFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Save-ToFile.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Save-Settings.ps1"
+. "$PSScriptRoot/Scripts/FileIO/Write-RunSummary.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Import-Settings.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Get-ValidatedAppList.ps1"
 . "$PSScriptRoot/Scripts/FileIO/Import-AppsFromFile.ps1"

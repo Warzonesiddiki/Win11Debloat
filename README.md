@@ -184,6 +184,12 @@ Below is an overview of the key features and functionality offered by Win11Deblo
   .\Win11Debloat.ps1 -RepairDrift   # report, then re-apply only the reverted settings
   ```
 
+- Machine-readable run summaries for deployment, so a script can check the outcome without parsing console output.
+
+  ```PowerShell
+  .\Win11Debloat.ps1 -RunDefaults -Silent -RunSummaryPath "C:\reports\pc01.json"
+  ```
+
 ## Contributing
 
 We welcome contributions of all kinds! Please see our [Contributing Guidelines](https://github.com/Raphire/Win11Debloat/blob/master/.github/CONTRIBUTING.md) for detailed instructions on how to get started and best practices for contributing.
